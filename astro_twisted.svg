@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 180">
+  <ellipse cx="60" cy="115" rx="35" ry="48" fill="#2244aa"/>
+  <circle cx="60" cy="58" r="38" fill="#3355cc"/>
+  <circle cx="60" cy="56" r="30" fill="#99bbff" opacity="0.3"/>
+  <ellipse cx="60" cy="56" rx="22" ry="20" fill="#001133"/>
+  <line x1="50" y1="40" x2="70" y2="72" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+  <line x1="60" y1="38" x2="48" y2="68" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+  <ellipse cx="52" cy="52" rx="8" ry="10" fill="#0011ff" opacity="0.9"/>
+  <ellipse cx="68" cy="50" rx="7" ry="11" fill="#0011ff" opacity="0.9"/>
+  <circle cx="52" cy="50" r="3" fill="#ff4400"/>
+  <circle cx="68" cy="48" r="3" fill="#ff6600"/>
+  <circle cx="60" cy="58" r="38" fill="none" stroke="#1133aa" stroke-width="4"/>
+  <ellipse cx="22" cy="108" rx="12" ry="28" fill="#1a3388"/>
+  <ellipse cx="98" cy="108" rx="12" ry="28" fill="#1a3388"/>
+  <circle cx="60" cy="118" r="12" fill="#1122aa" stroke="#3366ff" stroke-width="2"/>
+  <text x="60" y="122" text-anchor="middle" fill="#ff4400" font-size="14">✦</text>
+  <rect x="30" y="42" width="20" height="3" fill="#00ffff" opacity="0.5"/>
+  <rect x="72" y="60" width="16" height="2" fill="#ff0000" opacity="0.6"/>
+</svg>

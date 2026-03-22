@@ -552,6 +552,56 @@ body.colorblind .hall-door-bar.closed{background:#00f!important;box-shadow:0 0 1
 body.power-out{animation:panicFlash .4s 5}
 body.heat-flash{animation:heatFlash .5s 3}
 
+/* ── MEDIDOR DE PÂNICO ── */
+#panic-bar-wrap{width:90px}
+#panic-bar{height:100%;border-radius:3px;background:#a000f0;transition:width .8s,background .5s}
+#panic-lbl{font-size:.68em;color:#a000f0}
+#panic-lbl.low{color:#f80;animation:blink .6s infinite}
+#panic-lbl.critical{color:#f00;animation:blink .25s infinite}
+@keyframes panicPulse{0%,100%{box-shadow:0 0 6px #a000f0}50%{box-shadow:0 0 20px #ff00ff,0 0 40px #a000f0}}
+#panic-bar-wrap.danger{animation:panicPulse .5s infinite}
+
+/* ── SKILL CHECK ── */
+#skillcheck-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:600;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+#skillcheck-overlay.show{display:flex}
+#skillcheck-box{background:#0a0005;border:2px solid #ff00ff;border-radius:10px;padding:28px 36px;text-align:center;animation:scPulse .3s ease-in-out infinite alternate}
+@keyframes scPulse{from{box-shadow:0 0 10px #ff00ff}to{box-shadow:0 0 30px #ff00ff,0 0 60px #a000f0}}
+#skillcheck-box h3{color:#ff00ff;font-size:1.3em;margin-bottom:8px}
+#skillcheck-box p{color:#888;font-size:.82em;margin-bottom:14px}
+#skillcheck-timer-wrap{width:220px;height:8px;background:#1a0020;border-radius:4px;margin:0 auto 16px}
+#skillcheck-timer-bar{height:100%;border-radius:4px;background:#ff00ff;transition:width .05s linear}
+#btn-skillcheck{padding:12px 40px;background:#330044;border:2px solid #ff00ff;color:#ff00ff;font-size:1.1em;cursor:pointer;font-family:inherit;border-radius:6px;letter-spacing:2px;transition:all .1s}
+#btn-skillcheck:hover{background:#550066;box-shadow:0 0 20px #ff00ff}
+#btn-skillcheck:active{transform:scale(.95)}
+
+/* ── ISCA / LURE ── */
+#btn-lure{margin-top:5px;padding:6px 12px;background:#001a1a;border:1px solid #0aa;color:#0ff;cursor:pointer;font-family:inherit;font-size:.72em;border-radius:4px;transition:all .2s;display:none}
+#btn-lure.show{display:block}
+#btn-lure:hover{background:#003333}
+#btn-lure.cooldown{color:#333;border-color:#0a0a0a;cursor:default}
+#lure-cd-wrap{width:80px;height:4px;background:#001010;border-radius:2px;margin-top:3px;display:none}
+#lure-cd-wrap.show{display:block}
+#lure-cd-bar{height:100%;border-radius:2px;background:#0ff;transition:width 1s linear}
+
+/* ── CÂMERA DANDY'S WORLD ── */
+.rb-dandyroom{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%),
+    radial-gradient(ellipse 60% 60% at 50% 40%,rgba(180,0,255,.15) 0%,rgba(80,0,180,.1) 60%,transparent 100%),
+    repeating-linear-gradient(45deg,#0a0012 0,#0a0012 18px,#080010 18px,#080010 36px);
+  background-size:auto,auto,auto,auto;
+  background-repeat:repeat,no-repeat,no-repeat,repeat}
+.rb-flowerroom{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.75) 100%),
+    radial-gradient(circle at 20% 70%,rgba(255,0,200,.2) 0%,transparent 40%),
+    radial-gradient(circle at 80% 30%,rgba(0,255,200,.15) 0%,transparent 40%),
+    linear-gradient(180deg,#050010 0%,#0a0018 60%,#050010 100%);
+  background-size:auto,auto,auto,auto,auto;
+  background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat}
+
 /* ── RESPONSIVIDADE ── */
 /* Tablet (≤768px): painéis laterais menores, câmera direita mais estreita */
 @media(max-width:768px){
@@ -639,8 +689,12 @@ body.heat-flash{animation:heatFlash .5s 3}
       <p>💡 <b style="color:#aaa">Luzes</b> — ilumine o corredor</p>
       <p>🌡️ <b style="color:#aaa">Temperatura</b> — ligue o ventilador!</p>
       <p>🕳️ <b style="color:#aaa">Dutos</b> — vigie os ventiladores!</p><br>
+      <p>😰 <b style="color:#aaa">Pânico</b> — não deixe eles chegarem perto!</p>
+      <p>🎵 <b style="color:#aaa">Isca</b> — afasta personagens da porta (L)</p>
+      <p>🛡️ <b style="color:#aaa">Skill Check</b> — clique rápido quando atacado!</p><br>
       <p style="color:#333">🐻Freddy 🐰Bonnie 🐥Chica 🦊Foxy 🕷️Mangue</p>
-      <span class="hint-key">Q/E=Portas · A/D=Luzes · C=Câmera · F=Fan · S=Selar</span>
+      <p style="color:#555">🎩Dandy 🐌Shelly 📺Vee 🚀Astro 🐤Rodger</p>
+      <span class="hint-key">Q/E=Portas · A/D=Luzes · C=Câmera · F=Fan · S=Selar · L=Isca</span>
     </div>
     <div class="mbox">
       <h3>MODO</h3>
@@ -678,6 +732,7 @@ body.heat-flash{animation:heatFlash .5s 3}
     <button class="btn-action" onclick="showMinigame()">🎮 Mini-jogo</button>
     <button class="btn-action" onclick="toggleColorblind()">👁️ Daltonismo</button>
     <button class="btn-action" onclick="toggleVHS()">📼 VHS</button>
+    <button class="btn-action" id="btn-fullscreen" onclick="toggleFullscreen()">⛶ Tela Cheia</button>
   </div>
   <div style="margin-top:8px">
     <label style="font-size:.7em;color:#333"><input type="checkbox" id="chk-nightmare" onchange="toggleNightmare(this.checked)"> Modo Pesadelo (N1 dificuldade máxima)</label>
@@ -711,6 +766,10 @@ body.heat-flash{animation:heatFlash .5s 3}
     <div class="hud-block">
       <div class="hud-lbl" id="hp-lbl">❤️ VIDA: <span id="hp-val">100</span>%</div>
       <div class="hud-bar-wrap" id="hp-bar-wrap"><div id="hp-bar" style="width:100%"></div></div>
+    </div>
+    <div class="hud-block">
+      <div class="hud-lbl" id="panic-lbl">😰 PÂNICO: <span id="panic-val">0</span>%</div>
+      <div class="hud-bar-wrap" id="panic-bar-wrap"><div id="panic-bar" style="width:0%"></div></div>
     </div>
     <svg id="clock-svg" viewBox="0 0 48 48">
       <circle cx="24" cy="24" r="22" class="clock-face"/>
@@ -750,6 +809,8 @@ body.heat-flash{animation:heatFlash .5s 3}
         <button id="btn-fan" onclick="toggleFan()" title="F">🌀 Ventilador</button>
         <button id="powerup-btn" onclick="usePowerup()">⚡ RECARGA!</button>
         <button id="seal-vent-btn" onclick="sealVent()">🔒 SELAR DUTO</button>
+        <button id="btn-lure" onclick="useLure()" title="L">🎵 ISCA</button>
+        <div id="lure-cd-wrap"><div id="lure-cd-bar" style="width:100%"></div></div>
         <div style="font-size:.58em;color:#444;margin-top:4px">🕳️ DUTO</div>
         <div id="vent-timer-bar-wrap"><div id="vent-timer-bar" style="width:100%"></div></div>
       </div>
@@ -832,6 +893,7 @@ body.heat-flash{animation:heatFlash .5s 3}
   <div id="bottom-bar">
     <button id="btn-cam-toggle" onclick="toggleCamera()">📷 Câmeras</button>
     <div id="survive-bar">⏰ <span id="time-pct">0%</span> da noite</div>
+    <button class="btn-action" style="font-size:.72em;padding:5px 10px" onclick="toggleFullscreen()">⛶</button>
   </div>
 </div>
 
@@ -999,6 +1061,16 @@ body.heat-flash{animation:heatFlash .5s 3}
   <div id="fx-bang-right"></div>
   <div id="fx-win"></div>
   <div id="fx-heat"></div>
+</div>
+
+<!-- ══ SKILL CHECK ══ -->
+<div id="skillcheck-overlay">
+  <div id="skillcheck-box">
+    <h3>⚠️ REAJA AGORA!</h3>
+    <p id="skillcheck-msg">Clique o botão antes que ele entre!</p>
+    <div id="skillcheck-timer-wrap"><div id="skillcheck-timer-bar" style="width:100%"></div></div>
+    <button id="btn-skillcheck" onclick="resolveSkillCheck(true)">🛡️ BLOQUEIAR!</button>
+  </div>
 </div>
 
 <!-- ══ ACHIEVEMENT POPUP ══ -->
@@ -1278,12 +1350,24 @@ const MOVE_SPEED={
   chica: [999,999,48,30,18],
   foxy:  [999,90,65,40,25], // time between "peek" advances
   mangle:[999,80,60,38,22], // duct crawler
+  // ── Dandy's World Twisteds ──
+  dandytwisted: [999,999,55,32,18], // noite 3+ — mata instantaneamente
+  shellytwisted:[999,999,22,14, 9], // noite 3+ — muito rápida
+  veetwisted:   [999,999,999,58,32],// noite 4+ — drena câmera
+  astrotwisted: [999,999,999,52,28],// noite 4+ — drena energia extra
+  rodgertwisted:[999,999,999,48,25],// noite 4+ — teleporta na porta
 };
 
 const CHAR_DEF={
   freddy:{name:'Freddy Fofofo',  emoji:'🐻',img:'freddy.png',side:'left', path:['stage','dining','left_hall','left_door']},
   bonnie:{name:'Bonnie Coelho',  emoji:'🐰',img:'bonnie.png',side:'right',path:['stage2','kitchen','right_hall','right_door']},
   chica: {name:'Chica Garotinha',emoji:'🐥',img:'chica.png', side:'left', path:['dining','left_hall','left_door']},
+  // ── Dandy's World Twisteds ──
+  dandytwisted: {name:'Twisted Dandy', emoji:'🎩',img:'dandy_twisted.svg', side:'left',  path:['dandyroom','dining','left_hall','left_door'],  special:'instant_kill'},
+  shellytwisted:{name:'Twisted Shelly',emoji:'🐌',img:'shelly_twisted.svg',side:'right', path:['flowerroom','right_hall','right_door'],          special:'fast'},
+  veetwisted:   {name:'Twisted Vee',   emoji:'📺',img:'vee_twisted.svg',   side:'left',  path:['dandyroom','backstage','left_hall','left_door'],  special:'cam_drain'},
+  astrotwisted: {name:'Twisted Astro', emoji:'🚀',img:'astro_twisted.svg', side:'right', path:['flowerroom','prize','right_hall','right_door'],   special:'power_drain'},
+  rodgertwisted:{name:'Twisted Rodger',emoji:'🐤',img:'rodger_twisted.svg',side:'right', path:['kitchen','right_hall','right_door'],              special:'teleport'},
 };
 
 const FOXY_STAGES=['stage_cove','peek1','peek2','running']; // Pirate Cove stages
@@ -1304,6 +1388,9 @@ const ROOMS={
   duct_left: {label:'DUTO — Seção Esq',      desc:'Parece quieto por aqui.',            bg:'rb-vent',     furn:''},
   duct_center:{label:'DUTO — Centro',        desc:'Você ouve um barulho metálico...',   bg:'rb-vent',     furn:''},
   duct_right:{label:'DUTO — Seção Dir',      desc:'ESTÁ CHEGANDO!',                    bg:'rb-vent',     furn:''},
+  // ── Dandy's World rooms ──
+  dandyroom:  {label:'CAM D1 — Sala Dandy',  desc:'Um lugar colorido... e perturbador.', bg:'rb-dandyroom',furn:'🎪'},
+  flowerroom: {label:'CAM D2 — Sala das Flores',desc:'Flores que não deveriam florescer aqui.',bg:'rb-flowerroom',furn:'🌸'},
 };
 
 const CAM_ROOMS_LIST=[
@@ -1313,6 +1400,7 @@ const CAM_ROOMS_LIST=[
   {id:'cam5', room:'backstage'},{id:'cam2a',room:'left_hall'},
   {id:'cam4a',room:'right_hall'},{id:'cam2b',room:'left_door'},
   {id:'cam4b',room:'right_door'},
+  {id:'camd1',room:'dandyroom'},{id:'camd2',room:'flowerroom'},
 ];
 const DUCT_CAM_LIST=[
   {id:'duct1',room:'duct_left'},{id:'duct2',room:'duct_center'},{id:'duct3',room:'duct_right'},
@@ -1382,7 +1470,19 @@ function initState(night){
       freddy:{posIdx:0,timer:0,speed:MOVE_SPEED.freddy[night-1]*CFG.speedMult,active:true,transitioning:false,transTimer:0},
       bonnie:{posIdx:0,timer:0,speed:MOVE_SPEED.bonnie[night-1]*CFG.speedMult,active:true,transitioning:false,transTimer:0},
       chica: {posIdx:0,timer:0,speed:MOVE_SPEED.chica[night-1]*CFG.speedMult, active:night>=3,transitioning:false,transTimer:0},
+      // Dandy's World Twisteds
+      dandytwisted: {posIdx:0,timer:0,speed:MOVE_SPEED.dandytwisted[Math.min(night-1,4)]*CFG.speedMult, active:night>=3,transitioning:false,transTimer:0},
+      shellytwisted:{posIdx:0,timer:0,speed:MOVE_SPEED.shellytwisted[Math.min(night-1,4)]*CFG.speedMult,active:night>=3,transitioning:false,transTimer:0},
+      veetwisted:   {posIdx:0,timer:0,speed:MOVE_SPEED.veetwisted[Math.min(night-1,4)]*CFG.speedMult,   active:night>=4,transitioning:false,transTimer:0},
+      astrotwisted: {posIdx:0,timer:0,speed:MOVE_SPEED.astrotwisted[Math.min(night-1,4)]*CFG.speedMult, active:night>=4,transitioning:false,transTimer:0},
+      rodgertwisted:{posIdx:0,timer:0,speed:MOVE_SPEED.rodgertwisted[Math.min(night-1,4)]*CFG.speedMult,active:night>=4,transitioning:false,transTimer:0},
     },
+    panicMeter:0,          // 0-100 — ao atingir 100, game over
+    lureCooldown:0,        // segundos restantes do cooldown da isca
+    lureActive:false,
+    skillCheckActive:false,
+    skillCheckTimer:0,
+    skillCheckCallback:null,
     stats:{doors:0,cams:0,bangs:0,minPower:100,maxTemp:20,foxyBlocked:0,panicSecs:0,
            mvFreddy:0,mvBonnie:0,mvChica:0,mvMangle:0,
            blocked:{freddy:0,bonnie:0,chica:0,foxy:0,mangle:0}},
@@ -1442,6 +1542,7 @@ function startNight(night){
     initState(night);
     buildCamGrid();
     resetUI();
+    initLureButton();
     showScreen('screen-game');
     try{SFX.startAmbient(night)}catch(e){}
     try{SFX.startBreathing()}catch(e){} // #22
@@ -1525,6 +1626,63 @@ function gameTick(){
   if(G.randomEventTimer<=0){
     triggerRandomEvent();
     G.randomEventTimer=Math.floor(60+Math.random()*50);
+  }
+
+  // ── Medidor de Pânico ──────────────────────────────────
+  {
+    let panicDelta = -0.3; // recuperação base
+    const lDoor=charAtPos('left_door'), rDoor=charAtPos('right_door');
+    if(lDoor&&!G.leftDoor)  panicDelta += 3.5;
+    if(rDoor&&!G.rightDoor) panicDelta += 3.5;
+    if(lDoor&&rDoor)        panicDelta += 2;   // bônus se os dois ao mesmo tempo
+    if(G.power<20)          panicDelta += 1.2;
+    if(G.temperature>80)    panicDelta += 1.0;
+    if(G.foxyStage>=2)      panicDelta += 1.5;
+    if(G.mangle.posIdx>=2)  panicDelta += 1.0;
+    if(G.cameraOpen)        panicDelta -= 0.4; // câmera acalma um pouco
+    G.panicMeter = Math.max(0, Math.min(100, G.panicMeter + panicDelta));
+    if(G.panicMeter >= 100){ triggerPanicGameOver(); return; }
+  }
+
+  // ── Isca cooldown ──────────────────────────────────────
+  if(G.lureCooldown>0){
+    G.lureCooldown--;
+    const pct = ((45-G.lureCooldown)/45*100);
+    const cdBar=document.getElementById('lure-cd-bar');
+    if(cdBar) cdBar.style.width=pct+'%';
+    if(G.lureCooldown<=0){
+      const btn=document.getElementById('btn-lure');
+      const wrap=document.getElementById('lure-cd-wrap');
+      if(btn){btn.classList.remove('cooldown');btn.textContent='🎵 ISCA';}
+      if(wrap) wrap.classList.remove('show');
+    }
+  }
+
+  // ── Habilidades especiais Dandy's World ────────────────
+  // Twisted Vee: drena energia extra quando câmera aberta
+  if(G.chars.veetwisted?.active){
+    const veeRoom=CHAR_DEF.veetwisted.path[G.chars.veetwisted.posIdx];
+    const curCamRoom=[...CAM_ROOMS_LIST].find(c=>c.id===G.activeCam)?.room;
+    if(G.cameraOpen && curCamRoom===veeRoom && G.time%3===0){
+      G.power=Math.max(0,G.power-2.5);
+      addEvent('📺 Twisted Vee drena a câmera!','danger');
+    }
+  }
+  // Twisted Astro: drena energia extra a cada 8s quando ativo
+  if(G.chars.astrotwisted?.active && G.time%8===0){
+    const astroIdx=G.chars.astrotwisted.posIdx;
+    if(astroIdx>=2){
+      G.power=Math.max(0,G.power-3);
+      addEvent('🚀 Twisted Astro drena sistemas!','danger');
+    }
+  }
+  // Twisted Rodger: chance de teleportar direto para a porta
+  if(G.chars.rodgertwisted?.active && G.time%12===0){
+    const ch=G.chars.rodgertwisted;
+    if(ch.posIdx>0 && ch.posIdx<CHAR_DEF.rodgertwisted.path.length-1 && Math.random()<0.18){
+      ch.posIdx=CHAR_DEF.rodgertwisted.path.length-1;
+      addEvent('🐤 Twisted Rodger TELEPORTOU para a porta!','danger');
+    }
   }
 
   // Alerts
@@ -1711,8 +1869,23 @@ function moveChar(id,ch){
   if(ch.posIdx>=path.length-1){
     const dc=def.side==='left'?G.leftDoor:G.rightDoor;
     const stuck=def.side==='left'?G.doorStuckLeft:false;
-    if(dc||stuck){SFX.bang();G.stats.bangs++;if(window.SCENE)window.SCENE.doBangFlash(def.side);if(G.stats.blocked)G.stats.blocked[id]=(G.stats.blocked[id]||0)+1;if(Math.random()<.35)ch.posIdx=Math.max(0,ch.posIdx-1)}
-    else triggerGameOver(def.name+' '+def.emoji);
+    if(dc||stuck){
+      SFX.bang();G.stats.bangs++;
+      if(window.SCENE)window.SCENE.doBangFlash(def.side);
+      if(G.stats.blocked)G.stats.blocked[id]=(G.stats.blocked[id]||0)+1;
+      if(Math.random()<.35)ch.posIdx=Math.max(0,ch.posIdx-1);
+    } else if(def.special==='instant_kill'){
+      // Twisted Dandy mata sem dar chance
+      triggerGameOver(def.name+' '+def.emoji);
+    } else if(!G.skillCheckActive && Math.random()<0.4){
+      // Skill check: 40% de chance ao ser atacado sem porta
+      triggerSkillCheck(def.name,
+        ()=>{ ch.posIdx=Math.max(0,ch.posIdx-2); addEvent(`✅ Skill check! ${def.emoji} recuou!`,''); SFX.nightWin(); },
+        ()=>{ triggerGameOver(def.name+' '+def.emoji); }
+      );
+    } else {
+      triggerGameOver(def.name+' '+def.emoji);
+    }
     return;
   }
   // #23 Step volume por proximidade
@@ -1752,6 +1925,84 @@ function usePowerup(){
   G.power=Math.min(100,G.power+25);
   addEvent('⚡ Energia recarregada +25%','');
   SFX.nightWin();
+}
+
+// ══════════════════════════════════════════════════════════
+// PÂNICO — GAME OVER
+// ══════════════════════════════════════════════════════════
+function triggerPanicGameOver(){
+  stopGame(); G.phase='gameover';
+  try{SFX.jumpscare()}catch(e){}
+  document.getElementById('jumpscare-cont').textContent='😰';
+  document.getElementById('gameover-msg').textContent='Você entrou em colapso de pânico! Não aguentou a pressão...';
+  if(window.SCENE) window.SCENE.doJumpscare('freddy');
+  else setTimeout(()=>showScreen('screen-gameover'),450);
+}
+
+// ══════════════════════════════════════════════════════════
+// ISCA (LURE)
+// ══════════════════════════════════════════════════════════
+function initLureButton(){
+  const btn=document.getElementById('btn-lure');
+  if(btn) btn.classList.add('show');
+}
+function useLure(){
+  if(!G||G.phase!=='playing') return;
+  if(G.lureCooldown>0) return;
+  G.power=Math.max(0,G.power-8);
+  G.lureCooldown=45;
+  G.lureActive=true;
+  // Afasta um personagem aleatório de perto da porta
+  const candidates=Object.entries(G.chars).filter(([id,ch])=>
+    ch.active && ch.posIdx>=CHAR_DEF[id].path.length-2
+  );
+  if(candidates.length>0){
+    const [id,ch]=candidates[Math.floor(Math.random()*candidates.length)];
+    ch.posIdx=Math.max(0,ch.posIdx-2);
+    addEvent(`🎵 Isca atraiu ${CHAR_DEF[id].name}!`,'');
+    speak('Isca ativada!');
+  } else {
+    addEvent('🎵 Isca ativada — ninguém perto.','');
+  }
+  setTimeout(()=>{G.lureActive=false},3000);
+  const btn=document.getElementById('btn-lure');
+  const wrap=document.getElementById('lure-cd-wrap');
+  if(btn){btn.classList.add('cooldown');btn.textContent='🎵 recarga...';}
+  if(wrap){wrap.classList.add('show');document.getElementById('lure-cd-bar').style.width='0%';}
+  SFX.light();
+}
+
+// ══════════════════════════════════════════════════════════
+// SKILL CHECK
+// ══════════════════════════════════════════════════════════
+let _skillTimer=null;
+function triggerSkillCheck(charName, onSuccess, onFail){
+  if(G.skillCheckActive) return;
+  G.skillCheckActive=true;
+  const overlay=document.getElementById('skillcheck-overlay');
+  const timerBar=document.getElementById('skillcheck-timer-bar');
+  const msg=document.getElementById('skillcheck-msg');
+  if(msg) msg.textContent=`${charName} está na porta! Reaja!`;
+  overlay.classList.add('show');
+  timerBar.style.transition='none';
+  timerBar.style.width='100%';
+  setTimeout(()=>{timerBar.style.transition='width 1.4s linear';timerBar.style.width='0%';},30);
+  G.skillCheckCallback={onSuccess,onFail};
+  _skillTimer=setTimeout(()=>{
+    resolveSkillCheck(false);
+  },1500);
+}
+function resolveSkillCheck(success){
+  if(!G.skillCheckActive) return;
+  G.skillCheckActive=false;
+  clearTimeout(_skillTimer);
+  const overlay=document.getElementById('skillcheck-overlay');
+  overlay.classList.remove('show');
+  if(G.skillCheckCallback){
+    if(success) G.skillCheckCallback.onSuccess();
+    else G.skillCheckCallback.onFail();
+    G.skillCheckCallback=null;
+  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1915,6 +2166,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='c') toggleCamera();
   else if(k==='f') toggleFan();
   else if(k==='s') sealVent();
+  else if(k==='l') useLure();
   else if(k==='escape'&&G.cameraOpen) toggleCamera();
   // Jogador 2 (#50)
   else if(TWO_PLAYER){
@@ -2131,6 +2383,16 @@ function updateHUD(){
   else if(hp<=50){hpBar.style.background='#f80';hpLbl.className='hud-lbl low';}
   else{hpBar.style.background='#0f0';hpLbl.className='hud-lbl';}
   if(G.guardHp<=0){triggerGameOver('guard');return;}
+  // Pânico
+  const pm=Math.ceil(G.panicMeter||0);
+  const pmEl=document.getElementById('panic-val'); if(pmEl) pmEl.textContent=pm;
+  const pmBar=document.getElementById('panic-bar');
+  const pmWrap=document.getElementById('panic-bar-wrap');
+  const pmLbl=document.getElementById('panic-lbl');
+  if(pmBar) {pmBar.style.width=pm+'%'; pmBar.style.background=pm>70?'#ff00ff':pm>40?'#cc00cc':'#a000f0';}
+  if(pmWrap) pmWrap.classList.toggle('danger',pm>70);
+  if(pmLbl) pmLbl.className='hud-lbl'+(pm>80?' critical':pm>50?' low':'');
+
   // Night
   document.getElementById('night-num').textContent=G.night;
   document.getElementById('time-pct').textContent=Math.min(100,Math.floor(G.time/NIGHT_DUR*100))+'%';
@@ -2180,6 +2442,27 @@ function toggleNightmare(on){NIGHTMARE_MODE=on}
 // ══════════════════════════════════════════════════════════
 // VHS + COLORBLIND TOGGLES
 // ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+// TELA CHEIA
+// ══════════════════════════════════════════════════════════
+function toggleFullscreen(){
+  const el=document.documentElement;
+  if(!document.fullscreenElement&&!document.webkitFullscreenElement){
+    const req=el.requestFullscreen||el.webkitRequestFullscreen||el.mozRequestFullScreen||el.msRequestFullscreen;
+    if(req) req.call(el);
+    document.getElementById('btn-fullscreen')&&(document.getElementById('btn-fullscreen').textContent='✕ Sair Tela Cheia');
+  } else {
+    const ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;
+    if(ex) ex.call(document);
+    document.getElementById('btn-fullscreen')&&(document.getElementById('btn-fullscreen').textContent='⛶ Tela Cheia');
+  }
+}
+document.addEventListener('fullscreenchange',()=>{
+  const btn=document.getElementById('btn-fullscreen');
+  if(btn) btn.textContent=document.fullscreenElement?'✕ Sair Tela Cheia':'⛶ Tela Cheia';
+});
+document.addEventListener('keydown',e=>{if(e.key==='F11'){e.preventDefault();toggleFullscreen();}},{capture:true});
+
 let vhsOn=false, cbOn=false;
 function toggleVHS(){
   vhsOn=!vhsOn;
@@ -2279,6 +2562,11 @@ const CHAR_BIOS={
   chica: {name:'Chica Garotinha',img:'chica.png',bio:'Fanática por pizza. Só acorda na Noite 3, mas é persistente quando começa.',stats:'Aparece: Noite 3 | Velocidade: Média'},
   foxy:  {name:'Foxy Pirata',img:'foxy.png',bio:'Espreita no Covil do Foxy. Se você não o vigiar, ele corre pelo corredor esquerdo!',stats:'Aparece: Noite 2 | Tática: Monitorar câmera 1C ajuda'},
   mangle:{name:'Mangue',img:'mangle.png',bio:'A aranha dos dutos. Rastreia pelo sistema de ventilação e ataca pelo teto.',stats:'Aparece: Noite 2 | Rota: Dutos de ventilação'},
+  dandytwisted: {name:'Twisted Dandy',img:'dandy_twisted.svg',bio:'Não há como bloquear sua entrada. Se ele chegar, é fim. Monitore-o nas câmeras D1.',stats:'Aparece: Noite 3 | Habilidade: Mata instantaneamente'},
+  shellytwisted:{name:'Twisted Shelly',img:'shelly_twisted.svg',bio:'A mais rápida de todos. Câmeras quase não conseguem acompanhá-la.',stats:'Aparece: Noite 3 | Habilidade: Velocidade extrema'},
+  veetwisted:   {name:'Twisted Vee',   img:'vee_twisted.svg',  bio:'Drena a câmera quando você a observa. Quanto mais você olha, mais energia perde.',stats:'Aparece: Noite 4 | Habilidade: Drena câmera'},
+  astrotwisted: {name:'Twisted Astro', img:'astro_twisted.svg',bio:'Interfere nos sistemas de energia à medida que se aproxima.',stats:'Aparece: Noite 4 | Habilidade: Drena energia'},
+  rodgertwisted:{name:'Twisted Rodger',img:'rodger_twisted.svg',bio:'Pode teleportar diretamente para a sua porta. Nunca ignore os barulhos.',stats:'Aparece: Noite 4 | Habilidade: Teleporte'},
 };
 // ══════════════════════════════════════════════════════════
 // SCORE SHARING
@@ -2299,13 +2587,12 @@ function showGallery(){
   const maxNight=scored.length?Math.max(...scored.map(s=>s.night)):0;
   const grid=document.getElementById('gallery-grid'); grid.innerHTML='';
   Object.entries(CHAR_BIOS).forEach(([id,c],i)=>{
-    const unlocked=(i===0)||(id==='bonnie')||(id==='chica'&&maxNight>=3)||(id==='foxy'&&maxNight>=2)||(id==='mangle'&&maxNight>=2);
-    const card=document.createElement('div'); card.className='gallery-card'+(unlocked?'':' locked');
+    const card=document.createElement('div'); card.className='gallery-card';
     card.innerHTML=`
-      <div class="gc-lock">${unlocked?'':'🔒'}</div>
-      <img src="${c.img}" alt="${c.name}" style="${unlocked?'':'filter:brightness(0)'}">
+      <img src="${c.img}" alt="${c.name}">
       <div class="gc-name">${c.name}</div>
-      ${unlocked?`<div class="gc-bio">${c.bio}</div><div class="gc-stats">${c.stats}</div>`:'<div class="gc-bio">Complete mais noites para desbloquear</div>'}
+      <div class="gc-bio">${c.bio}</div>
+      <div class="gc-stats">${c.stats}</div>
     `;
     grid.appendChild(card);
   });
