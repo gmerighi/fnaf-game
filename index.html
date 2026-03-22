@@ -22,7 +22,8 @@
 body.fx-shaking{animation:fxShake .45s ease-in-out}
 /* ── RESET ── */
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;overflow:hidden;height:100vh;user-select:none}
+body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;overflow:hidden;height:100vh;height:100dvh;user-select:none;touch-action:manipulation}
+button{min-height:34px;touch-action:manipulation}
 
 /* ── TEMAS ── */
 body.theme-red  { --accent:#f00; --accent2:#900; --cam:#1a0000; --cam-border:#800 }
@@ -238,7 +239,7 @@ body            { --accent:#0f0; --accent2:#090; --cam:#020e02; --cam-border:#0a
 #seal-vent-btn.show{display:block}
 
 /* Camera overlay */
-#camera-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,12,0,.97);display:none;flex-direction:row;gap:10px;padding:10px;z-index:10}
+#camera-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,12,0,.97);display:none;flex-direction:row;gap:10px;padding:10px;z-index:10;box-sizing:border-box}
 #camera-overlay.open{display:flex}
 #cam-left-col{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
 
@@ -564,18 +565,61 @@ body.heat-flash{animation:heatFlash .5s 3}
   .mbox{min-width:160px}
   #cam-tabs .cam-tab{padding:4px 8px;font-size:.65em}
 }
-/* Mobile (≤480px): layout vertical simplificado */
-@media(max-width:480px){
-  .side-panel{width:52px;gap:4px;padding:6px 2px}
-  .btn-door,.btn-light,.btn-vent{width:44px;font-size:.58em;padding:5px 1px}
+/* Mobile (≤600px): câmera fullscreen + layout compacto */
+@media(max-width:600px){
+  /* ── HUD compacto ── */
+  #hud{padding:3px 6px;min-height:38px;gap:6px;flex-wrap:nowrap;overflow-x:auto}
+  .hud-block{gap:1px;flex-shrink:0}
+  .hud-lbl{font-size:.52em}
+  #power-bar-wrap{width:55px}
+  #temp-bar-wrap{width:45px}
+  #hp-bar-wrap{width:55px}
+  #clock-svg{width:28px;height:28px}
+  #night-lbl{font-size:.6em;white-space:nowrap}
+
+  /* ── Painéis laterais mínimos ── */
+  .side-panel{width:46px;gap:4px;padding:5px 2px}
+  .btn-door,.btn-light,.btn-vent{width:40px;font-size:.52em;padding:6px 1px;line-height:1.3}
   .side-lbl{display:none}
-  #cam-right-col{width:88px}
-  .cam-tab{padding:3px 6px;font-size:.6em}
-  #hud{flex-wrap:wrap;gap:5px;padding:3px 6px;min-height:auto}
+
+  /* ── CÂMERA FULLSCREEN (fix principal) ── */
+  #camera-overlay{
+    position:fixed!important;
+    top:0;left:0;right:0;bottom:0;
+    z-index:50;
+    flex-direction:column;
+    padding:8px;
+    gap:6px;
+  }
+  /* Esconde mini-mapa lateral — libera toda largura pro feed */
+  #cam-right-col{display:none}
+  /* Feed ocupa todo espaço disponível */
+  #cam-left-col{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px}
+  #cam-feed-box{flex:1;min-height:0}
+
+  /* Botões de câmera menores */
+  #cam-grid{gap:4px}
+  .cam-btn{padding:5px 9px;font-size:.62em}
+  .cam-tab{padding:4px 10px;font-size:.62em}
+  #btn-close-cam{padding:5px 18px;font-size:.75em}
+
+  /* ── Bottom bar ── */
+  #bottom-bar{padding:5px 8px;gap:10px}
+  #btn-cam-toggle{padding:7px 18px;font-size:.78em}
+  #survive-bar{font-size:.62em}
+
+  /* ── Menu ── */
   #screen-menu h1{font-size:1.4em}
   #screen-menu .sub{display:none}
   #menu-cols{flex-direction:column}
   .mbox{min-width:unset}
+}
+/* Mobile pequeno (≤380px) */
+@media(max-width:380px){
+  .side-panel{width:38px}
+  .btn-door,.btn-light,.btn-vent{width:34px;font-size:.48em}
+  #hud{gap:4px}
+  .hud-lbl{font-size:.48em}
 }
 </style>
 </head>
