@@ -614,37 +614,112 @@ body.heat-flash{animation:heatFlash .5s 3}
   background-size:auto,auto,auto,auto,auto;
   background-repeat:repeat,no-repeat,no-repeat,no-repeat,no-repeat}
 
-/* ── RESPONSIVIDADE ── */
-/* Tablet (≤768px): painéis laterais menores, câmera direita mais estreita */
+/* ══════════════════════════════════════════════
+   RESPONSIVIDADE COMPLETA
+   ══════════════════════════════════════════════ */
+
+/* ── Tablet (≤768px) ── */
 @media(max-width:768px){
   .side-panel{width:70px;gap:6px;padding:8px 4px}
   .btn-door,.btn-light,.btn-vent{width:58px;font-size:.65em;padding:6px 2px}
   #cam-right-col{width:110px}
   #hud{padding:4px 8px;min-height:44px}
   #power-bar-wrap{width:80px}
+  #temp-bar-wrap{width:60px}
+  #panic-bar-wrap{width:60px}
   #clock-svg{width:36px;height:36px}
   #screen-menu h1{font-size:1.8em}
   .mbox{min-width:160px}
   #cam-tabs .cam-tab{padding:4px 8px;font-size:.65em}
 }
-/* Mobile (≤600px): câmera fullscreen + layout compacto */
-@media(max-width:600px){
-  /* ── HUD compacto ── */
-  #hud{padding:3px 6px;min-height:38px;gap:6px;flex-wrap:nowrap;overflow-x:auto}
-  .hud-block{gap:1px;flex-shrink:0}
-  .hud-lbl{font-size:.52em}
-  #power-bar-wrap{width:55px}
-  #temp-bar-wrap{width:45px}
-  #hp-bar-wrap{width:55px}
-  #clock-svg{width:28px;height:28px}
-  #night-lbl{font-size:.6em;white-space:nowrap}
 
-  /* ── Painéis laterais mínimos ── */
-  .side-panel{width:46px;gap:4px;padding:5px 2px}
-  .btn-door,.btn-light,.btn-vent{width:40px;font-size:.52em;padding:6px 1px;line-height:1.3}
+/* ── Mobile (≤600px) ── */
+@media(max-width:600px){
+
+  /* LAYOUT GERAL */
+  body{overflow:hidden}
+  #screen-game{
+    display:grid!important;
+    grid-template-rows:auto 1fr auto;
+    height:100dvh;
+    overflow:hidden;
+  }
+
+  /* HUD — linha única compacta */
+  #hud{
+    padding:3px 6px;
+    min-height:36px;
+    max-height:44px;
+    gap:4px;
+    flex-wrap:nowrap;
+    overflow:hidden;
+    flex-shrink:0;
+  }
+  .hud-block{gap:1px;flex-shrink:0;min-width:0}
+  .hud-lbl{font-size:.46em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #power-bar-wrap{width:44px}
+  #temp-bar-wrap{width:36px}
+  #hp-bar-wrap{width:36px}
+  #panic-bar-wrap{width:36px}
+  #clock-svg{width:26px;height:26px;flex-shrink:0}
+  #night-lbl{font-size:.55em;white-space:nowrap;flex-shrink:0}
+  #hud-2p{display:none!important}
+  /* Esconde label do pânico no mobile — salva espaço */
+  #panic-lbl .hud-bar-wrap{display:none}
+
+  /* ÁREA DO JOGO */
+  #game-area{
+    flex:1;
+    overflow:hidden;
+    min-height:0;
+    display:flex;
+    align-items:stretch;
+  }
+
+  /* PAINÉIS LATERAIS — mínimos mas táteis */
+  .side-panel{
+    width:52px;
+    flex-shrink:0;
+    gap:6px;
+    padding:8px 3px;
+  }
+  .btn-door,.btn-light,.btn-vent{
+    width:46px;
+    min-height:52px;
+    font-size:.58em;
+    padding:8px 2px;
+    line-height:1.4;
+    border-radius:6px;
+  }
   .side-lbl{display:none}
 
-  /* ── CÂMERA FULLSCREEN (fix principal) ── */
+  /* BOTTOM BAR — câmera sempre visível e grande */
+  #bottom-bar{
+    padding:6px 10px;
+    gap:8px;
+    flex-shrink:0;
+    background:#080808;
+    border-top:2px solid #1a1a1a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:52px;
+  }
+  #btn-cam-toggle{
+    flex:1;
+    max-width:200px;
+    padding:12px 10px!important;
+    font-size:.95em!important;
+    font-weight:bold;
+    border-radius:8px!important;
+    border-width:2px!important;
+    min-height:44px;
+  }
+  #survive-bar{display:none}
+  /* esconde botão de tela cheia na bottom bar no mobile */
+  #bottom-bar .btn-action{display:none}
+
+  /* CÂMERA — fullscreen real */
   #camera-overlay{
     position:fixed!important;
     top:0;left:0;right:0;bottom:0;
@@ -653,35 +728,63 @@ body.heat-flash{animation:heatFlash .5s 3}
     padding:8px;
     gap:6px;
   }
-  /* Esconde mini-mapa lateral — libera toda largura pro feed */
   #cam-right-col{display:none}
-  /* Feed ocupa todo espaço disponível */
   #cam-left-col{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px}
   #cam-feed-box{flex:1;min-height:0}
+  #cam-grid{gap:4px;justify-content:flex-start}
+  .cam-btn{padding:6px 10px;font-size:.65em;min-height:32px}
+  .cam-tab{padding:5px 12px;font-size:.65em}
+  #btn-close-cam{
+    padding:10px 28px;
+    font-size:.85em;
+    background:#1a0000;
+    border:2px solid #f00;
+    color:#f44;
+    border-radius:8px;
+    min-height:40px;
+  }
 
-  /* Botões de câmera menores */
-  #cam-grid{gap:4px}
-  .cam-btn{padding:5px 9px;font-size:.62em}
-  .cam-tab{padding:4px 10px;font-size:.62em}
-  #btn-close-cam{padding:5px 18px;font-size:.75em}
-
-  /* ── Bottom bar ── */
-  #bottom-bar{padding:5px 8px;gap:10px}
-  #btn-cam-toggle{padding:7px 18px;font-size:.78em}
-  #survive-bar{font-size:.62em}
-
-  /* ── Menu ── */
-  #screen-menu h1{font-size:1.4em}
+  /* MENU */
+  #screen-menu{padding:16px 12px}
+  #screen-menu h1{font-size:1.5em}
   #screen-menu .sub{display:none}
-  #menu-cols{flex-direction:column}
-  .mbox{min-width:unset}
+  #menu-cols{flex-direction:column;gap:10px}
+  .mbox{min-width:unset;padding:10px}
+  .btn-main{width:100%;padding:14px;font-size:1em}
+  #continue-box{margin-top:8px}
+  #btn-continue{width:100%;padding:12px;font-size:.9em}
+
+  /* SKILL CHECK — tela toda no mobile */
+  #skillcheck-box{padding:20px 18px;width:88%}
+  #skillcheck-box h3{font-size:1.1em}
+  #btn-skillcheck{padding:14px 30px;font-size:1em;width:100%}
+  #skillcheck-timer-wrap{width:100%}
+
+  /* DESK — oculta itens menos usados */
+  #desk-art .monitor-ico{display:none}
+  #desk-hint{font-size:.5em;min-height:auto}
+  #btn-fan{font-size:.62em;padding:5px 8px}
+  #btn-lure{font-size:.6em;padding:5px 8px}
+  #seal-vent-btn{font-size:.6em;padding:5px 8px}
+  #powerup-btn{font-size:.6em;padding:5px 8px}
 }
-/* Mobile pequeno (≤380px) */
-@media(max-width:380px){
+
+/* ── Mobile pequeno (≤400px) ── */
+@media(max-width:400px){
+  .side-panel{width:44px}
+  .btn-door,.btn-light,.btn-vent{width:40px;min-height:48px;font-size:.52em}
+  #hud{gap:3px}
+  .hud-lbl{font-size:.42em}
+  #power-bar-wrap,#temp-bar-wrap,#hp-bar-wrap,#panic-bar-wrap{width:30px}
+  #clock-svg{width:22px;height:22px}
+  #btn-cam-toggle{font-size:.85em!important;padding:10px 8px!important}
+}
+
+/* ── Mobile muito pequeno (≤340px) ── */
+@media(max-width:340px){
   .side-panel{width:38px}
   .btn-door,.btn-light,.btn-vent{width:34px;font-size:.48em}
-  #hud{gap:4px}
-  .hud-lbl{font-size:.48em}
+  #temp-bar-wrap,#panic-bar-wrap{display:none}
 }
 </style>
 </head>
