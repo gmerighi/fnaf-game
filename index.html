@@ -475,6 +475,18 @@ body.colorblind .btn-light.active{background:#ff0!important;border-color:#ff0!im
 body.colorblind #temp-bar{background:linear-gradient(90deg,#ff0,#f0f)!important}
 body.colorblind .hall-door-bar.closed{background:#00f!important;box-shadow:0 0 10px #00f!important}
 
+/* ── SAVE / CONTINUE ── */
+#continue-box{background:rgba(0,30,0,.6);border:1px solid #0a0;border-radius:6px;padding:10px 16px;margin-top:10px;text-align:center;display:none}
+#continue-box.show{display:block}
+#continue-box .cb-night{color:#0f0;font-size:1em;font-weight:bold}
+#continue-box .cb-date{color:#444;font-size:.7em;margin-top:2px}
+#btn-continue{padding:8px 28px;background:#004400;border:1px solid #0f0;color:#0f0;cursor:pointer;font-family:inherit;font-size:.88em;border-radius:4px;margin-top:8px;transition:all .2s}
+#btn-continue:hover{background:#006600;box-shadow:0 0 10px #0f0}
+#btn-clear-save{background:none;border:none;color:#333;font-size:.65em;cursor:pointer;font-family:inherit;margin-top:4px;display:block;width:100%}
+#btn-clear-save:hover{color:#666}
+#save-toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#001a00;border:1px solid #0a0;color:#0f0;padding:8px 20px;border-radius:20px;font-size:.78em;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+#save-toast.show{opacity:1}
+
 /* ── CURTAIN (Night start) ── */
 #curtain{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:300;pointer-events:none;display:none}
 #curtain.fade-out{animation:curtainFade .8s ease forwards}
@@ -723,7 +735,13 @@ body.heat-flash{animation:heatFlash .5s 3}
       <ul id="scores-list"><li class="empty">Nenhum recorde ainda</li></ul>
     </div>
   </div>
-  <button class="btn-main" onclick="startGame()">🌙 Começar Jogo</button>
+  <div id="continue-box">
+    <div class="cb-night" id="cb-night-txt">▶ Continuar — Noite ?</div>
+    <div class="cb-date" id="cb-date-txt"></div>
+    <button id="btn-continue" onclick="continueGame()">▶ Continuar de onde parei</button>
+    <button id="btn-clear-save" onclick="clearSave()">🗑 apagar progresso salvo</button>
+  </div>
+  <button class="btn-main" onclick="startGame()">🌙 Novo Jogo</button>
   <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
     <button class="btn-action" onclick="showTutorial()">❓ Tutorial</button>
     <button class="btn-action" onclick="showGallery()">🖼️ Galeria</button>
@@ -1062,6 +1080,9 @@ body.heat-flash{animation:heatFlash .5s 3}
   <div id="fx-win"></div>
   <div id="fx-heat"></div>
 </div>
+
+<!-- ══ SAVE TOAST ══ -->
+<div id="save-toast">💾 Progresso salvo!</div>
 
 <!-- ══ SKILL CHECK ══ -->
 <div id="skillcheck-overlay">
@@ -1527,7 +1548,7 @@ function showScreen(id){
   if(el)el.classList.add('active');
   document.dispatchEvent(new CustomEvent('fnaf-screen-shown',{detail:id}));
 }
-function showMenu(){stopGame();renderScores();showScreen('screen-menu')}
+function showMenu(){stopGame();renderScores();renderContinueBox();showScreen('screen-menu')}
 
 // ══════════════════════════════════════════════════════════
 // INÍCIO / PARAR
@@ -2088,6 +2109,9 @@ function triggerNightWin(){
   gEl.textContent=gr.g; gEl.style.color=gr.c;
   document.getElementById('stats-grade-label').textContent=gr.l;
   checkNightAchievements();
+  // Auto-save: próxima noite a jogar
+  const nextSaveNight = CFG.mode==='5nights' ? Math.min(G.night+1, 5) : G.night+1;
+  saveProgress(nextSaveNight);
   showScreen('screen-nightstats');
 }
 
@@ -2442,6 +2466,49 @@ function toggleNightmare(on){NIGHTMARE_MODE=on}
 // ══════════════════════════════════════════════════════════
 // VHS + COLORBLIND TOGGLES
 // ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+// SALVAR / CARREGAR PROGRESSO
+// ══════════════════════════════════════════════════════════
+function saveProgress(night){
+  try{
+    const data={
+      night,
+      date:new Date().toLocaleString('pt-BR'),
+      achievements:getAchievements(),
+      scores:getScores()
+    };
+    localStorage.setItem('fnaf_save',JSON.stringify(data));
+    showSaveToast();
+  }catch(e){}
+}
+function loadProgress(){
+  try{return JSON.parse(localStorage.getItem('fnaf_save'))||null}catch(e){return null}
+}
+function clearSave(){
+  try{localStorage.removeItem('fnaf_save')}catch(e){}
+  document.getElementById('continue-box').classList.remove('show');
+  document.getElementById('btn-continue').textContent='▶ Continuar de onde parei';
+}
+function continueGame(){
+  const save=loadProgress();
+  if(!save) return;
+  startNight(save.night);
+}
+function showSaveToast(){
+  const t=document.getElementById('save-toast');
+  if(!t) return;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function renderContinueBox(){
+  const save=loadProgress();
+  const box=document.getElementById('continue-box');
+  if(!save||!box) return;
+  box.classList.add('show');
+  document.getElementById('cb-night-txt').textContent=`▶ Continuar — Noite ${save.night}`;
+  document.getElementById('cb-date-txt').textContent=`Salvo em: ${save.date}`;
+}
+
 // ══════════════════════════════════════════════════════════
 // TELA CHEIA
 // ══════════════════════════════════════════════════════════
@@ -3199,7 +3266,7 @@ try{const t=localStorage.getItem('fnaf_theme');if(t)setTheme(t)}catch(e){}
 try{if(localStorage.getItem('fnaf_vhs')==='1')toggleVHS()}catch(e){}
 try{if(localStorage.getItem('fnaf_cb')==='1')toggleColorblind()}catch(e){}
 // Show loading screen then menu
-runLoadingScreen(()=>{showScreen('screen-menu');renderScores()});
+runLoadingScreen(()=>{showScreen('screen-menu');renderScores();renderContinueBox()});
 </script>
 </body>
 </html>
