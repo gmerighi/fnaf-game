@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5 Noites na Fabby's 🐻</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐻</text></svg>">
+<style>
+/* ── CAMADA DE EFEITOS VISUAIS (FX) ── */
+#fx-overlay{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:1000;display:none}
+#fx-overlay.active{display:block}
+#fx-black{position:absolute;inset:0;background:#000;opacity:0;transition:opacity .05s}
+#fx-char{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.35);opacity:0;width:340px;height:340px;object-fit:contain}
+#fx-static{position:absolute;inset:0}
+#fx-bang-left{position:absolute;top:0;left:0;bottom:0;width:32%;background:rgba(255,0,0,0);transition:background .05s}
+#fx-bang-right{position:absolute;top:0;right:0;bottom:0;width:32%;background:rgba(255,0,0,0);transition:background .05s}
+#fx-win{position:absolute;inset:0;background:rgba(0,255,80,0);transition:background .12s}
+#fx-heat{position:absolute;inset:0;background:rgba(255,120,0,0);transition:background .12s}
+@keyframes fxShake{0%,100%{transform:translate(0,0)}10%{transform:translate(-6px,-3px)}20%{transform:translate(6px,4px)}30%{transform:translate(-5px,2px)}40%{transform:translate(5px,-3px)}50%{transform:translate(-4px,3px)}60%{transform:translate(4px,-2px)}70%{transform:translate(-3px,1px)}80%{transform:translate(3px,-1px)}90%{transform:translate(-2px,2px)}}
+@keyframes fxCharIn{0%{transform:translate(-50%,-50%) scale(.25);opacity:0}60%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-50%) scale(1.05);opacity:1}}
+@keyframes fxFlicker{0%,100%{opacity:.9}25%{opacity:.05}50%{opacity:.85}75%{opacity:.05}}
+body.fx-shaking{animation:fxShake .45s ease-in-out}
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#fff;font-family:'Courier New',monospace;overflow:hidden;height:100vh;user-select:none}
+
+/* ── TEMAS ── */
+body.theme-red  { --accent:#f00; --accent2:#900; --cam:#1a0000; --cam-border:#800 }
+body.theme-blue { --accent:#09f; --accent2:#06a; --cam:#000e1a; --cam-border:#069 }
+body            { --accent:#0f0; --accent2:#090; --cam:#020e02; --cam-border:#0a0 }
+
+.screen{display:none;width:100%;height:100vh;position:absolute;top:0;left:0;flex-direction:column;align-items:center;justify-content:center}
+.screen.active{display:flex;z-index:20}
+#screen-game.active{z-index:2}
+
+/* ── MENU ── */
+#screen-menu{background:radial-gradient(ellipse at center,#1a0505 0%,#050000 100%);overflow-y:auto;padding:25px 15px}
+#screen-menu h1{font-size:2.6em;color:#ff4444;text-shadow:0 0 30px #f00,0 0 60px #900;margin-bottom:5px;animation:titlePulse 2s ease-in-out infinite}
+#screen-menu .sub{color:#444;font-size:.78em;margin-bottom:18px}
+#menu-cols{display:flex;gap:15px;max-width:820px;width:100%;flex-wrap:wrap}
+.mbox{flex:1;min-width:200px;border:1px solid #1e1e1e;padding:14px;border-radius:5px;background:rgba(0,0,0,.4)}
+.mbox h3{color:#555;font-size:.7em;letter-spacing:2px;margin-bottom:10px}
+.mbox p{color:#555;font-size:.78em;line-height:1.8}
+.tip{color:#888!important}
+.diff-row{display:flex;flex-direction:column;gap:3px;margin-bottom:12px}
+.diff-row label{font-size:.72em;color:#555}
+.diff-row .r2{display:flex;align-items:center;gap:8px}
+.diff-row input[type=range]{flex:1;accent-color:#800;cursor:pointer}
+.diff-row span{font-size:.72em;color:#cc4;min-width:70px;text-align:right}
+.mode-btns{display:flex;gap:8px;margin-bottom:10px}
+.mbtn{flex:1;padding:8px;background:#111;border:1px solid #333;color:#666;cursor:pointer;font-family:inherit;font-size:.78em;border-radius:3px;transition:all .2s}
+.mbtn.active{background:#1a0000;border-color:#600;color:#f44}
+.theme-row{display:flex;gap:8px;margin-top:8px}
+.tbtn{width:28px;height:28px;border-radius:50%;border:2px solid #333;cursor:pointer;transition:all .2s}
+.tbtn:hover{transform:scale(1.2)}
+.tbtn.active{border-color:#fff;box-shadow:0 0 8px currentColor}
+#scores-list{list-style:none}
+#scores-list li{display:flex;justify-content:space-between;font-size:.75em;color:#444;padding:4px 0;border-bottom:1px solid #111}
+#scores-list .empty{color:#2a2a2a;font-style:italic;font-size:.78em}
+.btn-main{padding:12px 38px;font-size:1em;background:#8a0000;color:#fff;border:2px solid #c00;border-radius:5px;cursor:pointer;font-family:inherit;letter-spacing:1px;transition:all .2s;margin-top:15px}
+.btn-main:hover{background:#c00;box-shadow:0 0 15px #f0000066}
+.hint-key{font-size:.6em;color:#333;display:block;margin-top:8px;text-align:center}
+
+/* ── NIGHT INTRO ── */
+#screen-nightintro{background:#000}
+#ni-title{font-size:3.5em;color:#f80;text-shadow:0 0 20px #a55;animation:fadeIn .5s ease}
+#ni-tip{color:#444;margin-top:12px;font-size:.82em}
+
+/* ── GAME ── */
+#screen-game{flex-direction:column;background:#080808;align-items:stretch;justify-content:flex-start}
+
+/* HUD */
+#hud{display:flex;justify-content:space-between;align-items:center;padding:6px 16px;background:#0c0c0c;border-bottom:1px solid #181818;flex-shrink:0;min-height:52px;gap:10px}
+.hud-block{display:flex;flex-direction:column;gap:3px}
+.hud-lbl{font-size:.68em;color:var(--accent)}
+.hud-lbl.low{color:#f80;animation:blink .6s infinite}
+.hud-lbl.critical{color:#f00;animation:blink .25s infinite}
+.hud-bar-wrap{height:5px;background:#1a1a1a;border-radius:3px}
+#power-bar-wrap{width:110px}
+#temp-bar-wrap{width:80px}
+#power-bar,#temp-bar{height:100%;border-radius:3px;transition:width .8s,background .5s}
+#power-bar{background:#0f0}
+#temp-bar{background:#0af}
+/* HP Bar do Segurança */
+#hp-bar-wrap{width:90px}
+#hp-bar{height:100%;border-radius:3px;background:#0f0;transition:width .6s,background .4s}
+/* Story overlay */
+#story-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:center;justify-content:center;flex-direction:column;padding:30px}
+#story-overlay.show{display:flex}
+#story-box{max-width:560px;width:100%;background:#0d0d0d;border:1px solid #333;border-radius:8px;padding:28px;font-family:'Courier New',monospace}
+#story-portrait{font-size:3.5em;text-align:center;margin-bottom:12px}
+#story-speaker{color:#f80;font-size:.75em;letter-spacing:2px;margin-bottom:8px}
+#story-text{color:#ccc;font-size:.9em;line-height:1.8;min-height:80px;margin-bottom:18px}
+#story-choices{display:flex;flex-direction:column;gap:8px}
+.story-choice{padding:10px 16px;background:#111;border:1px solid #333;color:#0f0;cursor:pointer;font-family:inherit;font-size:.82em;border-radius:4px;text-align:left;transition:all .15s}
+.story-choice:hover{background:#1a2a1a;border-color:#0f0}
+.story-choice.bad{border-color:#600;color:#f44}
+.story-choice.bad:hover{background:#1a0000}
+/* Vent camera images */
+.rb-vent{background-image:
+  repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+  radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.75) 100%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 260'%3E%3Crect width='400' height='260' fill='%23050505'/%3E%3Crect x='0' y='0' width='400' height='260' fill='%23070b07'/%3E%3Cg stroke='%23111' stroke-width='1.5' fill='none'%3E%3Crect x='30' y='30' width='340' height='200' rx='6'/%3E%3Crect x='50' y='50' width='300' height='160' rx='4'/%3E%3C/g%3E%3Cg fill='%230a0a0a' stroke='%23222' stroke-width='1'%3E%3Crect x='55' y='55' width='290' height='18' rx='2'/%3E%3Crect x='55' y='79' width='290' height='18' rx='2'/%3E%3Crect x='55' y='103' width='290' height='18' rx='2'/%3E%3Crect x='55' y='127' width='290' height='18' rx='2'/%3E%3Crect x='55' y='151' width='290' height='18' rx='2'/%3E%3Crect x='55' y='175' width='290' height='18' rx='2'/%3E%3Crect x='55' y='199' width='290' height='18' rx='2'/%3E%3C/g%3E%3Ccircle cx='200' cy='130' r='55' fill='%23030303' stroke='%23181818' stroke-width='2'/%3E%3Ccircle cx='200' cy='130' r='38' fill='%23050505' stroke='%23141414' stroke-width='1'/%3E%3Cg stroke='%231a1a1a' stroke-width='1' fill='none'%3E%3Cline x1='200' y1='92' x2='200' y2='168'/%3E%3Cline x1='162' y1='130' x2='238' y2='130'/%3E%3Cline x1='173' y1='103' x2='227' y2='157'/%3E%3Cline x1='173' y1='157' x2='227' y2='103'/%3E%3C/g%3E%3Ccircle cx='200' cy='130' r='12' fill='%23101010' stroke='%23222'/%3E%3Ctext x='200' y='248' text-anchor='middle' fill='%23333' font-size='10' font-family='monospace'%3EDUTO DE VENTILAÇÃO B2%3C/text%3E%3C/svg%3E");
+  background-size:auto,auto,cover;background-position:0 0,0 0,center;background-repeat:repeat,no-repeat,no-repeat}
+#clock-svg{width:48px;height:48px}
+.clock-face{fill:none;stroke:#222;stroke-width:2}
+.clock-hr,.clock-mn{stroke:#888;stroke-width:2;stroke-linecap:round;transform-origin:24px 24px;transition:transform 1s linear}
+.clock-dot{fill:#fff}
+#night-lbl{font-size:.7em;color:#884400;text-align:right}
+#night-num{font-size:1.2em;color:#f80;display:block}
+
+/* Game area */
+#game-area{flex:1;display:flex;align-items:stretch;overflow:hidden}
+
+/* Side panels */
+.side-panel{width:102px;flex-shrink:0;background:#0c0c0c;border-right:1px solid #181818;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:10px 6px}
+.side-panel.right{border-right:none;border-left:1px solid #181818}
+.side-lbl{font-size:.6em;color:#333;letter-spacing:1px;text-align:center}
+.btn-door,.btn-light,.btn-vent{width:84px;padding:8px 4px;border-radius:4px;cursor:pointer;font-family:inherit;font-size:.76em;text-align:center;transition:all .15s}
+.btn-door{background:#1a0000;color:#c44;border:1px solid #400}
+.btn-door:hover{background:#260000}
+.btn-door.active{background:#500;border-color:#c00;color:#fff;box-shadow:0 0 8px #f0000044}
+.btn-light{background:#1a1800;color:#aa8;border:1px solid #440}
+.btn-light:hover{background:#252300}
+.btn-light.active{background:#3a3800;border-color:#aa0;color:#fff;box-shadow:0 0 8px #ffff0033}
+
+/* ── FNAF OFFICE (central de comando) ── */
+#office-center{
+  flex:1;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  transition:box-shadow .3s;
+  background:
+    /* Luminária — brilho âmbar do teto */
+    radial-gradient(ellipse 300px 260px at 50% 0%,rgba(255,195,55,.55) 0%,rgba(255,160,30,.2) 45%,transparent 72%),
+    /* Sombras nas bordas laterais */
+    radial-gradient(ellipse 38% 100% at 0% 50%,rgba(0,0,0,.75) 0%,transparent 55%),
+    radial-gradient(ellipse 38% 100% at 100% 50%,rgba(0,0,0,.75) 0%,transparent 55%),
+    /* Dado rail (friso horizontal parede/chão) */
+    linear-gradient(180deg,transparent 53.5%,rgba(90,90,90,.6) 54%,rgba(160,160,160,.7) 55%,rgba(70,70,70,.5) 56%,transparent 57%),
+    /* Parede cinza (topo) */
+    linear-gradient(180deg,#242424 0%,#303030 40%,#2c2c2c 54%,transparent 60%),
+    /* Piso xadrez preto/cinza */
+    repeating-conic-gradient(#1b1b1b 0% 25%,#272727 25% 50%) 0 0/30px 30px}
+
+/* Poster "CELEBRATE!" na parede de fundo */
+#office-center::before{
+  content:'★  CELEBRATE!  ★';
+  position:absolute;top:17%;left:50%;transform:translateX(-50%);
+  font-size:.6em;color:rgba(255,220,160,.55);letter-spacing:3px;
+  border:1px solid rgba(200,170,100,.22);padding:4px 12px;
+  background:rgba(60,35,10,.3);pointer-events:none;z-index:1;white-space:nowrap}
+
+/* Linhas de parede (textura) */
+#office-center::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:55%;
+  background:repeating-linear-gradient(0deg,transparent 0,transparent 44px,rgba(0,0,0,.12) 44px,rgba(0,0,0,.12) 46px);
+  pointer-events:none;z-index:0}
+
+/* #17 hour tint overlay div */
+#office-hour-tint{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;transition:background .8s}
+#office-center.panic-left {box-shadow:inset 12px 0 40px rgba(255,0,0,.6)}
+#office-center.panic-right{box-shadow:inset -12px 0 40px rgba(255,0,0,.6)}
+#office-center.panic-both {box-shadow:inset 0 0 70px rgba(255,0,0,.7)}
+#office-center.overheat   {box-shadow:inset 0 0 70px rgba(255,120,0,.55)}
+
+/* Luminária pendente FNAF */
+#office-lamp{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:52px;z-index:3;pointer-events:none;
+  /* Fio */
+  border-left:2px solid rgba(80,60,20,.8);
+  height:14%;}
+#office-lamp::after{
+  content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  width:48px;height:20px;
+  background:linear-gradient(180deg,#3a2800 0%,#6a4800 40%,#8a6010 70%,#c0900a 100%);
+  border-radius:4px 4px 50% 50%;
+  box-shadow:0 4px 30px rgba(255,190,50,.7),0 0 60px rgba(255,160,30,.35);}
+
+/* ── CORREDORES ── */
+#hall-left,#hall-right{
+  position:absolute;top:0;bottom:0;width:22%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:all .3s;
+  background:
+    /* Ponto de fuga no fundo (profundidade) */
+    radial-gradient(ellipse 28px 38px at 50% 42%,rgba(200,180,100,.6) 0%,rgba(160,140,60,.2) 60%,transparent 100%),
+    /* Teto corredor */
+    linear-gradient(180deg,#050505 0%,#0d0d0d 20%,transparent 32%),
+    /* Chão corredor */
+    linear-gradient(0deg,#050505 0%,#0c0c0c 20%,transparent 32%),
+    /* Paredes laterais (gradiente perspectiva) */
+    linear-gradient(180deg,#0c0c0c 0%,#161616 50%,#0c0c0c 100%)}
+#hall-left{left:0;box-shadow:inset -5px 0 20px rgba(0,0,0,.9),inset 2px 0 0 rgba(50,50,50,.3)}
+#hall-right{right:0;box-shadow:inset 5px 0 20px rgba(0,0,0,.9),inset -2px 0 0 rgba(50,50,50,.3)}
+#hall-left.lit,#hall-right.lit{
+  background:
+    radial-gradient(ellipse 100px 80% at 50% 50%,rgba(255,245,180,.22) 0%,transparent 70%),
+    radial-gradient(ellipse 28px 38px at 50% 42%,rgba(240,220,130,.85) 0%,rgba(200,170,80,.3) 60%,transparent 100%),
+    linear-gradient(180deg,#050505 0%,#0d0d0d 20%,transparent 32%),
+    linear-gradient(0deg,#050505 0%,#0c0c0c 20%,transparent 32%),
+    linear-gradient(180deg,#0c0c0c 0%,#161616 50%,#0c0c0c 100%)}
+.hall-cone{position:absolute;top:0;bottom:0;width:100%;background:radial-gradient(ellipse 65% 75% at 50% 50%,rgba(255,250,200,.25) 0%,transparent 70%);opacity:0;transition:opacity .25s;pointer-events:none}
+.hall-cone.on{opacity:1}
+.hall-char{width:70px;height:90px;display:none;animation:spook .4s ease-in-out infinite alternate;filter:drop-shadow(0 0 10px rgba(255,0,0,.5))}
+.hall-char.vis{display:block}
+.hall-char img{width:100%;height:100%;object-fit:contain}
+.hall-char.dim{filter:brightness(.05) blur(3px)}
+/* #19 Sombra no corredor antes da porta */
+#hall-left.has-shadow::before,#hall-right.has-shadow::before{content:'';position:absolute;width:40px;height:70px;background:rgba(0,0,0,.8);border-radius:50%;filter:blur(8px);animation:shadowFloat 3s ease-in-out infinite alternate;z-index:1}
+/* #12 Glitch quando char na porta aberta */
+#office-center.door-glitch{animation:glitch .2s steps(1) infinite}
+.hall-door-bar{width:100%;height:6px;background:transparent;transition:background .2s;position:absolute;bottom:0}
+.hall-door-bar.closed{background:#c00;box-shadow:0 0 10px #f00,0 -2px 6px rgba(255,0,0,.4)}
+.hall-door-lbl{position:absolute;bottom:12px;font-size:.62em;color:#400;letter-spacing:1px;opacity:0;transition:opacity .2s}
+.hall-door-lbl.closed{opacity:1;color:#f55}
+
+/* ── MESA DO SEGURANÇA ── */
+#desk-art{
+  text-align:center;position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:10px 18px 12px;
+  background:rgba(15,10,5,.75);
+  border-top:2px solid rgba(80,60,25,.7);
+  border-radius:6px 6px 0 0;
+  box-shadow:0 -6px 24px rgba(0,0,0,.6),0 0 0 1px rgba(60,45,15,.3)}
+.monitor-ico{font-size:2em;filter:drop-shadow(0 0 6px rgba(0,255,80,.25))}
+#desk-hint{font-size:.62em;color:#2a2a2a;margin-top:5px;max-width:140px;text-align:center;min-height:1.2em}
+#desk-hint.warn{color:#993300;animation:blink .45s infinite}
+/* Fan button */
+#btn-fan{margin-top:6px;padding:6px 12px;background:#001818;border:1px solid #055;color:#0aa;cursor:pointer;font-family:inherit;font-size:.72em;border-radius:4px;transition:all .2s}
+#btn-fan:hover{background:#002828}
+#btn-fan.active{background:#003a3a;border-color:#0ff;color:#0ff;box-shadow:0 0 8px #00ffff33;animation:fanSpin .6s linear infinite}
+/* Powerup button */
+#powerup-btn{margin-top:5px;padding:5px 14px;background:#1a1400;border:1px solid #880;color:#ff0;cursor:pointer;font-family:inherit;font-size:.72em;border-radius:4px;display:none;animation:powerupGlow 1s ease-in-out infinite alternate}
+@keyframes powerupGlow{from{box-shadow:0 0 5px #ff0}to{box-shadow:0 0 15px #ff0,0 0 30px #880}}
+/* Seal vent button */
+#seal-vent-btn{margin-top:5px;padding:6px 14px;background:#1a0a00;border:1px solid #a60;color:#fa0;cursor:pointer;font-family:inherit;font-size:.72em;border-radius:4px;display:none;animation:blink .4s infinite}
+#seal-vent-btn.show{display:block}
+
+/* Camera overlay */
+#camera-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,12,0,.97);display:none;flex-direction:row;gap:10px;padding:10px;z-index:10}
+#camera-overlay.open{display:flex}
+#cam-left-col{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0}
+
+/* Tabs */
+#cam-tabs{display:flex;gap:6px}
+.cam-tab{padding:5px 14px;background:#001400;border:1px solid #040;color:#060;cursor:pointer;font-family:inherit;font-size:.72em;border-radius:3px;transition:all .15s}
+.cam-tab:hover{background:#002200;color:#0a0}
+.cam-tab.active{background:#003a00;border-color:var(--cam-border);color:var(--accent)}
+
+/* Camera feed */
+#cam-feed-box{flex:1;border:1.5px solid var(--cam-border);border-radius:4px;position:relative;overflow:hidden;background:var(--cam);min-height:0}
+/* Scanlines */
+#cam-feed-box::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:6}
+/* Security camera green tint overlay */
+#cam-tint{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,30,0,.12);pointer-events:none;z-index:5}
+/* Noise grain */
+#cam-noise{position:absolute;top:0;left:0;right:0;bottom:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:4;animation:noiseAnim .08s steps(1) infinite}
+@keyframes noiseAnim{0%{transform:translate(0,0)}25%{transform:translate(-2%,-1%)}50%{transform:translate(1%,2%)}75%{transform:translate(-1%,1%)}100%{transform:translate(2%,-2%)}}}
+
+/* Imagem da câmera — <img> com object-fit para garantir carregamento */
+#cam-img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:top center;z-index:0;display:block}
+/* Overlay de vinheta + scanlines sobre a imagem */
+#cam-scene{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 100% 100% at 50% 50%,transparent 45%,rgba(0,0,0,.75) 100%),
+    linear-gradient(180deg,rgba(0,18,0,.2) 0%,rgba(0,10,0,.15) 100%)}
+
+/* Camadas de overlay comuns (scanlines + vinheta) aplicadas via #cam-feed-box::after */
+/* Cada .rb-* define: overlay gradientes + imagem de fundo */
+
+/* CAM 1A — Palco */
+.rb-stage{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%),
+    url('stage.jpg');
+  background-size:auto,auto,cover;
+  background-position:0 0,0 0,center;
+  background-repeat:repeat,no-repeat,no-repeat}
+
+/* CAM 1B — Refeitório */
+.rb-dining{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%),
+    url('dining.png');
+  background-size:auto,auto,cover;
+  background-position:0 0,0 0,center;
+  background-repeat:repeat,no-repeat,no-repeat}
+
+/* CAM 1C — Covil do Foxy */
+.rb-cove{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%),
+    url('cove.png');
+  background-size:auto,auto,cover;
+  background-position:0 0,0 0,center;
+  background-repeat:repeat,no-repeat,no-repeat}
+
+/* CAM 2A / 4A — Corredores */
+.rb-hall{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%),
+    url('hall.png');
+  background-size:auto,auto,cover;
+  background-position:0 0,0 0,center;
+  background-repeat:repeat,no-repeat,no-repeat}
+
+/* CAM 5 — Bastidores */
+.rb-backstage{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.7) 100%),
+    url('backstage.png');
+  background-size:auto,auto,cover;
+  background-position:0 0,0 0,center;
+  background-repeat:repeat,no-repeat,no-repeat}
+
+/* CAM 2B / 4B — Portas (sem imagem própria, usa hall) */
+.rb-door{
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.85) 100%),
+    url('hall.png');
+  background-size:auto,auto,cover;
+  background-position:0 0,0 0,center right;
+  background-repeat:repeat,no-repeat,no-repeat}
+
+/* Dutos — CSS art (sem imagem) */
+.rb-duct{
+  background:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.75) 100%),
+    radial-gradient(ellipse 55% 55% at 50% 50%,#2a2a2a 0%,#161616 45%,#060606 100%),
+    repeating-linear-gradient(0deg,transparent 0,transparent 22px,rgba(60,60,60,.7) 22px,rgba(60,60,60,.7) 25px),
+    repeating-linear-gradient(90deg,transparent 0,transparent 22px,rgba(50,50,50,.5) 22px,rgba(50,50,50,.5) 25px),
+    linear-gradient(180deg,#1a1a1a 0%,#242424 50%,#1a1a1a 100%)}
+
+/* CAM 6 — Cozinha (câmera desativada, CSS art) */
+.rb-kitchen{
+  background:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(0,0,0,.09) 3px,rgba(0,0,0,.09) 4px),
+    radial-gradient(ellipse 95% 95% at 50% 50%,transparent 50%,rgba(0,0,0,.85) 100%),
+    linear-gradient(180deg,#060c10 0%,#0a1218 50%,#060c10 100%)}
+
+/* Camera HUD overlay (timestamp + camera ID) */
+#cam-hud-overlay{position:absolute;top:0;left:0;right:0;padding:6px 10px;display:flex;justify-content:space-between;z-index:8;pointer-events:none}
+#cam-id-txt{font-size:.68em;color:rgba(0,255,0,.7);text-shadow:0 0 4px rgba(0,255,0,.5)}
+#cam-timestamp{font-size:.65em;color:rgba(0,255,0,.5);animation:staticBlink .8s infinite}
+#cam-rec{position:absolute;top:6px;right:10px;font-size:.62em;color:rgba(255,60,60,.8);z-index:8;animation:staticBlink .9s infinite}
+
+/* Glitch effect for high temp / offline */
+.cam-glitch{animation:glitch .15s steps(1) infinite}
+@keyframes glitch{
+  0%{filter:none}
+  20%{filter:hue-rotate(90deg) brightness(1.3);transform:translateX(2px)}
+  40%{filter:none;transform:translateX(-1px)}
+  60%{filter:saturate(3) brightness(.8)}
+  80%{filter:none;transform:translateY(1px)}
+  100%{filter:none;transform:none}}
+
+#cam-info{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.88));padding:18px 10px 8px;z-index:7}
+#cam-room-name{color:rgba(0,220,0,.9);font-size:.95em;margin-bottom:3px}
+#cam-room-chars{display:flex;gap:6px;align-items:flex-end;min-height:52px}
+#cam-room-desc{color:rgba(0,100,0,.8);font-size:.7em;margin-top:2px}
+.cam-char-img{height:50px;width:auto;object-fit:contain;filter:drop-shadow(0 0 6px rgba(255,0,0,.6)) brightness(.85) saturate(1.3);image-rendering:auto}
+.cam-char-peek1{opacity:.5;height:30px}
+.cam-char-peek2{opacity:.75;height:42px}
+.cam-char-run{filter:drop-shadow(0 0 10px rgba(255,0,0,.9)) brightness(.9);height:55px}
+#cam-offline-msg{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#050;font-size:.8em;text-align:center;z-index:9;animation:staticBlink .15s infinite}
+#cam-offline-msg.show{display:block}
+
+/* Grid of camera buttons */
+#cam-grid{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.cam-btn{padding:5px 10px;background:#001200;border:1px solid #050;color:#080;cursor:pointer;font-family:inherit;font-size:.68em;border-radius:3px;transition:all .12s;position:relative}
+.cam-btn:hover{background:#002000;color:#0b0}
+.cam-btn.active{background:#003200;border-color:var(--cam-border);color:var(--accent);box-shadow:0 0 5px rgba(0,255,0,.2)}
+.cam-btn .cdot{position:absolute;top:-4px;right:-3px;font-size:.9em;line-height:1}
+#btn-close-cam{align-self:center;padding:5px 20px;background:#1a0000;border:1px solid #600;color:#f44;cursor:pointer;font-family:inherit;font-size:.8em;border-radius:3px}
+
+/* Right col: mini-map + event log */
+#cam-right-col{width:155px;flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+#mini-map-title{font-size:.62em;color:#060;letter-spacing:1px;text-align:center}
+#mini-map{flex:1;border:1px solid #030;border-radius:4px;padding:8px 6px;background:#000e00;display:flex;flex-direction:column;align-items:center;justify-content:space-around;font-size:.58em;position:relative}
+.mm-row{display:flex;gap:4px;align-items:center;justify-content:center;width:100%}
+.mm-room{border:1px solid #040;border-radius:3px;padding:2px 4px;color:#040;text-align:center;background:#001000;min-width:40px;position:relative;transition:border-color .3s,color .3s}
+.mm-room.active-cam{border-color:var(--cam-border);color:var(--accent)}
+.mm-room.has-char{border-color:#660;color:#aa0}
+.mm-chars{position:absolute;top:-7px;right:-3px;font-size:1.4em;line-height:1}
+.mm-con{color:#040;flex-shrink:0}
+.mm-you{color:#0f0;font-size:.95em;text-align:center;border:1px solid #0a0;padding:2px 7px;border-radius:3px}
+
+/* Event log */
+#event-log{border:1px solid #030;border-radius:4px;padding:6px;background:#00080;max-height:90px;overflow-y:auto;font-size:.6em}
+#event-log .ev{color:#040;padding:1px 0;border-bottom:1px solid #020}
+#event-log .ev.warn{color:#660}
+#event-log .ev.danger{color:#600}
+
+/* Bottom bar */
+#bottom-bar{padding:7px;background:#0c0c0c;border-top:1px solid #181818;display:flex;justify-content:center;align-items:center;gap:15px;flex-shrink:0}
+#btn-cam-toggle{padding:8px 28px;background:#001600;border:1px solid #050;color:#090;cursor:pointer;font-family:inherit;font-size:.88em;border-radius:5px;transition:all .2s}
+#btn-cam-toggle:hover{background:#002200}
+#btn-cam-toggle.active{background:#003500;border-color:var(--cam-border);color:var(--accent);box-shadow:0 0 8px rgba(0,255,0,.25)}
+#survive-bar{font-size:.68em;color:#1e1e1e}
+
+/* ── GAME OVER ── */
+#screen-gameover{background:#000}
+#jumpscare-cont{font-size:6.5em;animation:jumpscareAnim .5s ease-out;margin-bottom:12px}
+#screen-gameover h2{font-size:2em;color:#f22;text-shadow:0 0 18px #f00;margin-bottom:7px}
+#gameover-msg{color:#444;margin-bottom:22px;font-size:.88em}
+
+/* ── NIGHT STATS ── */
+#screen-nightstats{background:radial-gradient(ellipse at center,#001500 0%,#000 100%)}
+#screen-nightstats h2{font-size:1.9em;color:#0d0;text-shadow:0 0 12px #0c0;margin-bottom:4px}
+#stats-night-msg{color:#060;font-size:.82em;margin-bottom:16px}
+#stats-box{border:1px solid #040;border-radius:5px;padding:14px 22px;background:rgba(0,20,0,.5);min-width:280px;margin-bottom:15px}
+.stat-row{display:flex;justify-content:space-between;gap:28px;font-size:.78em;padding:4px 0;border-bottom:1px solid #030}
+.stat-row:last-child{border-bottom:none}
+.stat-label{color:#050}.stat-val{color:#0d0}
+#stats-grade{font-size:3.8em;display:block;animation:fadeIn .6s ease}
+#stats-grade-label{font-size:.78em;color:#444;margin-top:4px}
+
+/* ── SALARY SCREEN ── */
+#screen-salary{background:#000}
+#salary-card{border:2px solid #444;border-radius:8px;padding:24px 32px;background:#0a0a0a;text-align:center;max-width:380px}
+#salary-card h2{color:#ff0;font-size:1.6em;margin-bottom:8px}
+#salary-card .company{color:#555;font-size:.75em;margin-bottom:18px;letter-spacing:2px}
+#salary-amount{font-size:2.5em;color:#0f0;margin:12px 0}
+#salary-msg{color:#555;font-size:.78em;line-height:1.7;margin-bottom:18px}
+
+/* ── GAME WIN ── */
+#screen-gamewin{background:radial-gradient(ellipse at center,#1a1400 0%,#000 100%)}
+#screen-gamewin h2{font-size:2.1em;color:#fc0;text-shadow:0 0 18px #fa0;margin-bottom:12px}
+#screen-gamewin p{color:#996;font-size:.88em;text-align:center;max-width:400px;line-height:1.9;margin-bottom:22px}
+
+/* ── SHARED BUTTON ── */
+.btn-action{padding:9px 26px;font-size:.88em;background:#161616;color:#888;border:1px solid #2a2a2a;border-radius:5px;cursor:pointer;font-family:inherit;margin:4px;transition:all .2s}
+.btn-action:hover{background:#222;color:#ccc;border-color:#444}
+
+/* ── VHS EFFECT ── */
+.vhs-overlay{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:100;display:none}
+.vhs-overlay.on{display:block}
+.vhs-line{position:absolute;left:0;right:0;height:2px;background:rgba(255,255,255,.06);animation:vhsScan 6s linear infinite}
+.vhs-noise{position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);opacity:.5}
+.vhs-rgb{position:absolute;top:0;left:0;right:0;bottom:0;mix-blend-mode:screen;background:radial-gradient(ellipse 120% 120% at 50% 50%,transparent 70%,rgba(255,0,0,.03) 85%,rgba(0,0,255,.03) 100%)}
+@keyframes vhsScan{0%{top:-5%}100%{top:105%}}
+
+/* ── ACHIEVEMENTS ── */
+#achievement-popup{position:fixed;top:14px;right:14px;z-index:200;display:flex;flex-direction:column;gap:6px}
+.ach-toast{background:#0a0a0a;border:1px solid #550;border-radius:5px;padding:10px 14px;min-width:220px;animation:achSlide .4s ease,achFadeOut .4s ease 3.6s forwards}
+.ach-toast .ach-ico{font-size:1.4em;margin-right:8px}
+.ach-toast .ach-title{font-size:.75em;color:#aa0;display:block;letter-spacing:1px}
+.ach-toast .ach-name{font-size:.88em;color:#ff0;display:block;margin-top:2px}
+@keyframes achSlide{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes achFadeOut{from{opacity:1}to{opacity:0;transform:translateX(110%)}}
+
+/* ── TUTORIAL OVERLAY ── */
+#tutorial-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:150;display:none;align-items:center;justify-content:center}
+#tutorial-overlay.show{display:flex}
+#tutorial-box{background:#0d0d0d;border:1px solid #333;border-radius:8px;padding:28px 32px;max-width:480px;width:90%;text-align:center}
+#tutorial-box h2{color:#f80;font-size:1.4em;margin-bottom:12px}
+#tutorial-box p{color:#666;font-size:.85em;line-height:1.9;margin-bottom:16px}
+.tut-step{display:none}.tut-step.active{display:block}
+#tut-progress{font-size:.68em;color:#333;margin-bottom:8px}
+.tut-nav{display:flex;gap:10px;justify-content:center;margin-top:8px}
+
+/* ── COLORBLIND MODE ── */
+body.colorblind #power-bar{background:linear-gradient(90deg,#0af,#00f)!important}
+body.colorblind .btn-door.active{background:#00f!important;border-color:#00f!important}
+body.colorblind .btn-light.active{background:#ff0!important;border-color:#ff0!important}
+body.colorblind #temp-bar{background:linear-gradient(90deg,#ff0,#f0f)!important}
+body.colorblind .hall-door-bar.closed{background:#00f!important;box-shadow:0 0 10px #00f!important}
+
+/* ── CURTAIN (Night start) ── */
+#curtain{position:fixed;top:0;left:0;right:0;bottom:0;background:#000;z-index:300;pointer-events:none;display:none}
+#curtain.fade-out{animation:curtainFade .8s ease forwards}
+@keyframes curtainFade{from{opacity:1}to{opacity:0;display:none}}
+
+/* ── SHADOW CHARS ── */
+.shadow-char{position:absolute;filter:brightness(0) blur(2px);opacity:.18;pointer-events:none;animation:shadowFloat 4s ease-in-out infinite alternate}
+@keyframes shadowFloat{from{transform:translateY(0) scale(1)}to{transform:translateY(-8px) scale(1.04)}}
+
+/* ── VENT TIMER BAR ── */
+#vent-timer-bar-wrap{width:80px;height:5px;background:#1a0a00;border-radius:3px;margin-top:3px}
+#vent-timer-bar{height:100%;border-radius:3px;background:#f80;transition:width .9s}
+
+/* ── SCREEN: LOADING ── */
+#screen-loading{background:#000;flex-direction:column;gap:16px}
+#screen-loading h2{color:#f80;font-size:1.6em;animation:titlePulse 1.5s infinite}
+#loading-bar-wrap{width:280px;height:6px;background:#1a1a1a;border-radius:3px}
+#loading-bar{height:100%;background:#f80;border-radius:3px;width:0%;transition:width .3s}
+#loading-msg{font-size:.75em;color:#333}
+
+/* ── SCREEN: GALLERY ── */
+#screen-gallery{background:#050505;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;gap:14px}
+#screen-gallery h2{color:#f80;font-size:1.5em}
+.gallery-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:700px}
+.gallery-card{width:130px;background:#0d0d0d;border:1px solid #222;border-radius:6px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.gallery-card:hover{border-color:#550;background:#151200}
+.gallery-card.locked{opacity:.35;cursor:default}
+.gallery-card img{width:80px;height:80px;object-fit:contain;display:block;margin:0 auto 8px}
+.gallery-card .gc-name{font-size:.75em;color:#888}
+.gallery-card .gc-bio{font-size:.65em;color:#444;margin-top:4px;line-height:1.5}
+.gallery-card .gc-lock{position:absolute;top:6px;right:8px;font-size:.9em}
+.gallery-card .gc-stats{font-size:.6em;color:#330;margin-top:6px;text-align:left}
+
+/* ── SCREEN: DIARY ── */
+#screen-diary{background:#05050a;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;gap:10px}
+#screen-diary h2{color:#a0f;font-size:1.5em}
+.diary-entries{max-width:500px;width:100%;display:flex;flex-direction:column;gap:10px}
+.diary-entry{background:#0a0a12;border-left:3px solid #303;padding:12px 14px;border-radius:0 5px 5px 0}
+.diary-entry .de-night{font-size:.65em;color:#505;letter-spacing:2px;margin-bottom:4px}
+.diary-entry .de-text{font-size:.8em;color:#666;line-height:1.8;font-style:italic}
+.diary-entry.locked{opacity:.3;cursor:default}
+.diary-entry.locked .de-text{color:#222}
+
+/* ── SCREEN: CUSTOM NIGHT ── */
+#screen-customnight{background:#080508;flex-direction:column;align-items:center;padding:24px 16px;gap:14px;overflow-y:auto}
+#screen-customnight h2{color:#f0f;font-size:1.5em}
+.cn-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:620px}
+.cn-char{background:#0d0d0d;border:1px solid #2a2a2a;border-radius:6px;padding:12px 16px;text-align:center;min-width:120px}
+.cn-char img{width:56px;height:56px;object-fit:contain;display:block;margin:0 auto 6px}
+.cn-char label{font-size:.68em;color:#555}
+.cn-char input[type=range]{width:90px;accent-color:#a0f}
+.cn-char .cn-val{font-size:.72em;color:#c0c;min-width:30px;display:inline-block;text-align:center}
+
+/* ── SCREEN: MINIGAME ── */
+#screen-minigame{background:#000a00;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+#screen-minigame h2{color:#0f0;font-size:1.4em}
+#mg-canvas{border:2px solid #040;border-radius:4px;cursor:crosshair;background:#001000;image-rendering:pixelated;max-width:100%}
+#mg-arena{display:flex}
+.mg-card{background:rgba(0,20,0,.7);border:1px solid #040;border-radius:8px;padding:20px 28px;cursor:pointer;text-align:center;transition:all .2s;min-width:150px}
+.mg-card:hover{border-color:#0f0;box-shadow:0 0 18px rgba(0,255,0,.2);transform:scale(1.04)}
+#mg-hud{font-size:.78em;color:#060;display:flex;gap:20px}
+#mg-result{font-size:1em;color:#0f0;text-align:center;min-height:1.4em}
+
+/* ── ANIMATIONS ── */
+@keyframes titlePulse{0%,100%{text-shadow:0 0 20px #f00,0 0 40px #800}50%{text-shadow:0 0 35px #f22,0 0 70px #c00,0 0 100px #600}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+@keyframes spook{from{transform:scale(1)}to{transform:scale(1.08) translateY(-3px)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+@keyframes jumpscareAnim{0%{transform:scale(.2) rotate(-15deg);opacity:0}55%{transform:scale(1.4) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+@keyframes staticBlink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes fanSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes hatFall{0%{transform:translateY(-120px) rotate(-20deg);opacity:0}60%{transform:translateY(20px) rotate(5deg);opacity:1}80%{transform:translateY(-8px) rotate(-2deg)}100%{transform:translateY(0) rotate(0deg);opacity:1}}
+@keyframes panicFlash{0%,100%{background:#080808}50%{background:#1e0000}}
+@keyframes heatFlash{0%,100%{background:#080808}50%{background:#1a0d00}}
+body.power-out{animation:panicFlash .4s 5}
+body.heat-flash{animation:heatFlash .5s 3}
+
+/* ── RESPONSIVIDADE ── */
+/* Tablet (≤768px): painéis laterais menores, câmera direita mais estreita */
+@media(max-width:768px){
+  .side-panel{width:70px;gap:6px;padding:8px 4px}
+  .btn-door,.btn-light,.btn-vent{width:58px;font-size:.65em;padding:6px 2px}
+  #cam-right-col{width:110px}
+  #hud{padding:4px 8px;min-height:44px}
+  #power-bar-wrap{width:80px}
+  #clock-svg{width:36px;height:36px}
+  #screen-menu h1{font-size:1.8em}
+  .mbox{min-width:160px}
+  #cam-tabs .cam-tab{padding:4px 8px;font-size:.65em}
+}
+/* Mobile (≤480px): layout vertical simplificado */
+@media(max-width:480px){
+  .side-panel{width:52px;gap:4px;padding:6px 2px}
+  .btn-door,.btn-light,.btn-vent{width:44px;font-size:.58em;padding:5px 1px}
+  .side-lbl{display:none}
+  #cam-right-col{width:88px}
+  .cam-tab{padding:3px 6px;font-size:.6em}
+  #hud{flex-wrap:wrap;gap:5px;padding:3px 6px;min-height:auto}
+  #screen-menu h1{font-size:1.4em}
+  #screen-menu .sub{display:none}
+  #menu-cols{flex-direction:column}
+  .mbox{min-width:unset}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ MENU ══ -->
+<div id="screen-menu" class="screen active">
+  <h1>🐻 5 Noites na Fabby's</h1>
+  <p class="sub">Um jogo de sobrevivência noturna</p>
+  <div id="menu-cols">
+    <div class="mbox">
+      <h3>COMO JOGAR</h3>
+      <p class="tip">🎭 Você é o segurança da Fabby's Pizzaria.</p>
+      <p class="tip">🌙 Sobreviva até <strong style="color:#ccc">6:00 AM</strong> por 5 noites!</p><br>
+      <p>📷 <b style="color:#aaa">Câmeras</b> — localize os personagens</p>
+      <p>🚪 <b style="color:#aaa">Portas</b> — bloqueie a entrada</p>
+      <p>💡 <b style="color:#aaa">Luzes</b> — ilumine o corredor</p>
+      <p>🌡️ <b style="color:#aaa">Temperatura</b> — ligue o ventilador!</p>
+      <p>🕳️ <b style="color:#aaa">Dutos</b> — vigie os ventiladores!</p><br>
+      <p style="color:#333">🐻Freddy 🐰Bonnie 🐥Chica 🦊Foxy 🕷️Mangue</p>
+      <span class="hint-key">Q/E=Portas · A/D=Luzes · C=Câmera · F=Fan · S=Selar</span>
+    </div>
+    <div class="mbox">
+      <h3>MODO</h3>
+      <div class="mode-btns">
+        <button class="mbtn active" id="mode-5n" onclick="setMode('5nights')">5 Noites</button>
+        <button class="mbtn" id="mode-en" onclick="setMode('endless')">Sem Fim</button>
+      </div>
+      <h3>DIFICULDADE</h3>
+      <div class="diff-row">
+        <label>Velocidade dos personagens</label>
+        <div class="r2"><input type="range" id="sl-speed" min=".5" max="2.5" step=".25" value="1"><span id="sl-speed-lbl">Normal</span></div>
+      </div>
+      <div class="diff-row">
+        <label>Drenagem de energia</label>
+        <div class="r2"><input type="range" id="sl-drain" min=".5" max="2.5" step=".25" value="1"><span id="sl-drain-lbl">Normal</span></div>
+      </div>
+      <h3 style="margin-top:8px">TEMA</h3>
+      <div class="theme-row">
+        <div class="tbtn active" style="background:#0f0;color:#0f0" title="Verde" onclick="setTheme('')"></div>
+        <div class="tbtn" style="background:#f00;color:#f00" title="Vermelho" onclick="setTheme('theme-red')"></div>
+        <div class="tbtn" style="background:#09f;color:#09f" title="Azul" onclick="setTheme('theme-blue')"></div>
+      </div>
+    </div>
+    <div class="mbox">
+      <h3>RECORDES</h3>
+      <ul id="scores-list"><li class="empty">Nenhum recorde ainda</li></ul>
+    </div>
+  </div>
+  <button class="btn-main" onclick="startGame()">🌙 Começar Jogo</button>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+    <button class="btn-action" onclick="showTutorial()">❓ Tutorial</button>
+    <button class="btn-action" onclick="showGallery()">🖼️ Galeria</button>
+    <button class="btn-action" onclick="showDiary()">📔 Diário</button>
+    <button class="btn-action" onclick="showCustomNight()">⚙️ Noite Custom</button>
+    <button class="btn-action" onclick="showMinigame()">🎮 Mini-jogo</button>
+    <button class="btn-action" onclick="toggleColorblind()">👁️ Daltonismo</button>
+    <button class="btn-action" onclick="toggleVHS()">📼 VHS</button>
+  </div>
+  <div style="margin-top:8px">
+    <label style="font-size:.7em;color:#333"><input type="checkbox" id="chk-nightmare" onchange="toggleNightmare(this.checked)"> Modo Pesadelo (N1 dificuldade máxima)</label>
+    &nbsp;
+    <label style="font-size:.7em;color:#333"><input type="checkbox" id="chk-baby" onchange="toggleBaby(this.checked)"> Modo Bebê (energia infinita)</label>
+    &nbsp;
+    <label style="font-size:.7em;color:#333"><input type="checkbox" id="chk-2p" onchange="toggleTwoPlayer(this.checked)"> Modo 2 Jogadores (U/O/H/K/J/N)</label>
+  </div>
+  <div style="margin-top:6px">
+    <span class="hint-key">MODO BEBÊ = energia infinita | PESADELO = máxima dificuldade desde N1</span>
+  </div>
+</div>
+
+<!-- ══ NIGHT INTRO ══ -->
+<div id="screen-nightintro" class="screen">
+  <h1 id="ni-title">Noite 1</h1>
+  <p id="ni-tip">Boa sorte...</p>
+</div>
+
+<!-- ══ GAME ══ -->
+<div id="screen-game" class="screen">
+  <div id="hud">
+    <div class="hud-block">
+      <div class="hud-lbl" id="power-lbl">⚡ ENERGIA: <span id="power-pct">100</span>%</div>
+      <div class="hud-bar-wrap" id="power-bar-wrap"><div id="power-bar" style="width:100%"></div></div>
+    </div>
+    <div class="hud-block">
+      <div class="hud-lbl" id="temp-lbl" style="color:#0af">🌡️ TEMP: <span id="temp-val">20</span>°C</div>
+      <div class="hud-bar-wrap" id="temp-bar-wrap"><div id="temp-bar" style="width:0%"></div></div>
+    </div>
+    <div class="hud-block">
+      <div class="hud-lbl" id="hp-lbl">❤️ VIDA: <span id="hp-val">100</span>%</div>
+      <div class="hud-bar-wrap" id="hp-bar-wrap"><div id="hp-bar" style="width:100%"></div></div>
+    </div>
+    <svg id="clock-svg" viewBox="0 0 48 48">
+      <circle cx="24" cy="24" r="22" class="clock-face"/>
+      <line id="clock-hr" x1="24" y1="24" x2="24" y2="10" class="clock-hr"/>
+      <line id="clock-mn" x1="24" y1="24" x2="24" y2="6"  class="clock-mn"/>
+      <circle cx="24" cy="24" r="2" class="clock-dot"/>
+    </svg>
+    <div id="night-lbl">NOITE <span id="night-num">1</span></div>
+    <span id="hud-2p" style="display:none;font-size:.65em;color:#09f;border:1px solid #09f;padding:2px 6px;border-radius:3px">2P</span>
+  </div>
+
+  <div id="game-area">
+    <div class="side-panel">
+      <div class="side-lbl">ESQUERDA</div>
+      <button class="btn-light" id="btn-light-left"  onclick="toggleLight('left')">💡<br>Luz Esq</button>
+      <button class="btn-door"  id="btn-door-left"   onclick="toggleDoor('left')">🚪<br>Porta Esq</button>
+    </div>
+
+    <div id="office-center">
+      <div id="office-hour-tint"></div>
+      <!-- Luminária pendente (CSS art) -->
+      <div id="office-lamp"></div>
+
+      <div id="hall-left">
+        <div class="hall-cone" id="cone-left"></div>
+        <span class="hall-char" id="char-left"></span>
+        <div style="position:absolute;top:10px;font-size:.6em;color:#121212">ESQ</div>
+        <div class="hall-door-lbl" id="door-lbl-left">▐ FECHADA ▌</div>
+        <div class="hall-door-bar" id="door-bar-left"></div>
+      </div>
+
+      <div id="desk-art">
+        <div class="monitor-ico">📺</div>
+        <div style="font-size:1.3em;margin-top:2px">🖥️</div>
+        <div style="font-size:.56em;color:#161616;letter-spacing:2px;margin-top:5px">SEGURANÇA</div>
+        <div id="desk-hint"></div>
+        <button id="btn-fan" onclick="toggleFan()" title="F">🌀 Ventilador</button>
+        <button id="powerup-btn" onclick="usePowerup()">⚡ RECARGA!</button>
+        <button id="seal-vent-btn" onclick="sealVent()">🔒 SELAR DUTO</button>
+        <div style="font-size:.58em;color:#444;margin-top:4px">🕳️ DUTO</div>
+        <div id="vent-timer-bar-wrap"><div id="vent-timer-bar" style="width:100%"></div></div>
+      </div>
+
+      <div id="hall-right">
+        <div class="hall-cone" id="cone-right"></div>
+        <span class="hall-char" id="char-right"></span>
+        <div style="position:absolute;top:10px;font-size:.6em;color:#121212">DIR</div>
+        <div class="hall-door-lbl" id="door-lbl-right">▐ FECHADA ▌</div>
+        <div class="hall-door-bar" id="door-bar-right"></div>
+      </div>
+
+      <!-- Camera overlay -->
+      <div id="camera-overlay">
+        <div id="cam-left-col">
+          <div id="cam-tabs">
+            <button class="cam-tab active" onclick="switchTab('cameras')">📷 CÂMERAS</button>
+            <button class="cam-tab" onclick="switchTab('ducts')">🕳️ DUTOS</button>
+          </div>
+          <div id="cam-feed-box">
+            <img id="cam-img" src="stage.jpg" alt="">
+            <div id="cam-scene"></div>
+            <div id="cam-tint"></div>
+            <div id="cam-noise"></div>
+            <div id="cam-hud-overlay">
+              <span id="cam-id-txt">CAM 1A</span>
+              <span id="cam-timestamp">00:00:00</span>
+            </div>
+            <div id="cam-rec">● REC</div>
+            <div id="cam-offline-msg">📡 SEM SINAL</div>
+            <div id="cam-info">
+              <div id="cam-room-name">CAM 1A — Palco</div>
+              <div id="cam-room-chars"></div>
+              <div id="cam-room-desc"></div>
+            </div>
+          </div>
+          <div id="cam-grid"></div>
+          <button id="btn-close-cam" onclick="toggleCamera()">❌ Fechar</button>
+        </div>
+        <div id="cam-right-col">
+          <div id="mini-map-title">📍 MAPA AO VIVO</div>
+          <div id="mini-map">
+            <div class="mm-row">
+              <div class="mm-room" id="mm-stage">Palco<span class="mm-chars" id="mmc-stage"></span></div>
+              <span class="mm-con">—</span>
+              <div class="mm-room" id="mm-dining">Refeit.<span class="mm-chars" id="mmc-dining"></span></div>
+              <span class="mm-con">—</span>
+              <div class="mm-room" id="mm-kitchen">Cozinha<span class="mm-chars" id="mmc-kitchen"></span></div>
+            </div>
+            <div class="mm-row" style="justify-content:space-between;padding:0 6px">
+              <span style="color:#040">│</span><span style="color:#040">│</span>
+            </div>
+            <div class="mm-row">
+              <div class="mm-room" id="mm-left_hall">C.Esq<span class="mm-chars" id="mmc-left_hall"></span></div>
+              <span style="width:50px;color:#040;text-align:center">│Cova│</span>
+              <div class="mm-room" id="mm-right_hall">C.Dir<span class="mm-chars" id="mmc-right_hall"></span></div>
+            </div>
+            <div class="mm-row" style="justify-content:space-between;padding:0 6px">
+              <span style="color:#040">│</span><span style="color:#040">│</span>
+            </div>
+            <div class="mm-row">
+              <div class="mm-room" id="mm-left_door">P.Esq<span class="mm-chars" id="mmc-left_door"></span></div>
+              <span style="width:50px"></span>
+              <div class="mm-room" id="mm-right_door">P.Dir<span class="mm-chars" id="mmc-right_door"></span></div>
+            </div>
+            <div class="mm-you">👤 VOCÊ</div>
+          </div>
+          <div id="event-log"><div class="ev" style="color:#030;font-style:italic">aguardando eventos...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-panel right">
+      <div class="side-lbl">DIREITA</div>
+      <button class="btn-light" id="btn-light-right" onclick="toggleLight('right')">💡<br>Luz Dir</button>
+      <button class="btn-door"  id="btn-door-right"  onclick="toggleDoor('right')">🚪<br>Porta Dir</button>
+    </div>
+  </div>
+
+  <div id="bottom-bar">
+    <button id="btn-cam-toggle" onclick="toggleCamera()">📷 Câmeras</button>
+    <div id="survive-bar">⏰ <span id="time-pct">0%</span> da noite</div>
+  </div>
+</div>
+
+<!-- ══ GAME OVER ══ -->
+<div id="screen-gameover" class="screen">
+  <div id="jumpscare-cont">😱</div>
+  <h2>FIM DE JOGO!</h2>
+  <p id="gameover-msg">Um personagem te pegou!</p>
+  <div style="margin-top:14px">
+    <button class="btn-action" onclick="retryNight()">🔄 Tentar Novamente</button>
+    <button class="btn-action" onclick="showMenu()">🏠 Menu</button>
+  </div>
+</div>
+
+<!-- ══ NIGHT STATS ══ -->
+<div id="screen-nightstats" class="screen">
+  <h2 id="stats-title">🌅 Sobreviveu!</h2>
+  <p id="stats-night-msg">Noite 1 concluída</p>
+  <div id="stats-box">
+    <div class="stat-row"><span class="stat-label">Portas fechadas</span><span class="stat-val" id="st-doors">0</span></div>
+    <div class="stat-row"><span class="stat-label">Câmeras verificadas</span><span class="stat-val" id="st-cams">0</span></div>
+    <div class="stat-row"><span class="stat-label">Pancadas na porta</span><span class="stat-val" id="st-bangs">0</span></div>
+    <div class="stat-row"><span class="stat-label">Energia mínima</span><span class="stat-val" id="st-power">0%</span></div>
+    <div class="stat-row"><span class="stat-label">Temp. máxima</span><span class="stat-val" id="st-temp">0°C</span></div>
+    <div class="stat-row"><span class="stat-label">Foxy bloqueado</span><span class="stat-val" id="st-foxy">0×</span></div>
+    <div class="stat-row"><span class="stat-label">🐻 Freddy bloqueado</span><span class="stat-val" id="st-blk-freddy">0×</span></div>
+    <div class="stat-row"><span class="stat-label">🐰 Bonnie bloqueado</span><span class="stat-val" id="st-blk-bonnie">0×</span></div>
+    <div class="stat-row"><span class="stat-label">🐥 Chica bloqueada</span><span class="stat-val" id="st-blk-chica">0×</span></div>
+    <div class="stat-row"><span class="stat-label">🕷️ Mangle bloqueado</span><span class="stat-val" id="st-blk-mangle">0×</span></div>
+    <div class="stat-row"><span class="stat-label">Movimentos Freddy</span><span class="stat-val" id="st-mv-freddy">0</span></div>
+    <div class="stat-row"><span class="stat-label">Movimentos Bonnie</span><span class="stat-val" id="st-mv-bonnie">0</span></div>
+    <div class="stat-row"><span class="stat-label">Movimentos Chica</span><span class="stat-val" id="st-mv-chica">0</span></div>
+    <div class="stat-row"><span class="stat-label">Ataques Mangle</span><span class="stat-val" id="st-mv-mangle">0</span></div>
+  </div>
+  <div id="stats-grade-box" style="text-align:center;margin-bottom:14px">
+    <span id="stats-grade">A</span>
+    <div id="stats-grade-label">avaliação</div>
+  </div>
+  <button class="btn-action" onclick="showSalary()">💵 Receber Salário</button>
+</div>
+
+<!-- ══ SALARY ══ -->
+<div id="screen-salary" class="screen">
+  <div id="salary-card">
+    <div class="company">FABBY'S PIZZARIA LTDA.</div>
+    <h2>📄 Contracheque</h2>
+    <div id="salary-amount">R$ 0,00</div>
+    <div id="salary-msg"></div>
+    <button class="btn-action" onclick="nextNight()">➡️ Próxima Noite</button>
+  </div>
+</div>
+
+<!-- ══ GAME WIN ══ -->
+<div id="screen-gamewin" class="screen">
+  <div id="freddy-hat" style="font-size:3em;animation:hatFall 1.2s cubic-bezier(.22,.68,0,1.6) forwards">🎩</div>
+  <h2>🏆 INCRÍVEL!</h2>
+  <p>Você sobreviveu às <b style="color:#fff">5 noites</b> na Fabby's!<br>
+  Você é o lendário segurança que nunca foi derrotado!<br><br>
+  🐻 Freddy ficou sem palavras.<br>🐰 Bonnie vai precisar de terapia.<br>
+  🐥 Chica te mandou pizza.<br>🦊 Foxy desapareceu nas sombras.<br>
+  🕷️ Mangue voltou para os dutos.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px">
+    <button class="btn-action" onclick="showMenu()">🏠 Menu Principal</button>
+    <button class="btn-action" onclick="showGallery()">🖼️ Galeria</button>
+    <button class="btn-action" onclick="showDiary()">📔 Diário</button>
+    <button class="btn-action" onclick="showCustomNight()">⚙️ Noite Custom</button>
+    <button class="btn-action" onclick="shareScore()">📤 Compartilhar</button>
+  </div>
+</div>
+
+<!-- ══ LOADING ══ -->
+<div id="screen-loading" class="screen">
+  <h2>Carregando...</h2>
+  <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+  <div id="loading-msg">Inicializando sistemas de segurança...</div>
+</div>
+
+<!-- ══ GALLERY ══ -->
+<div id="screen-gallery" class="screen">
+  <h2>🖼️ Galeria de Personagens</h2>
+  <div class="gallery-grid" id="gallery-grid"></div>
+  <button class="btn-action" style="margin-top:10px" onclick="showMenu()">🏠 Voltar</button>
+</div>
+
+<!-- ══ DIARY ══ -->
+<div id="screen-diary" class="screen">
+  <h2>📔 Diário do Segurança</h2>
+  <div class="diary-entries" id="diary-entries"></div>
+  <button class="btn-action" style="margin-top:10px" onclick="showMenu()">🏠 Voltar</button>
+</div>
+
+<!-- ══ CUSTOM NIGHT ══ -->
+<div id="screen-customnight" class="screen">
+  <h2>⚙️ Noite Customizada</h2>
+  <p style="color:#555;font-size:.78em">Ajuste a dificuldade de cada personagem (0=inativo, 20=máximo)</p>
+  <div class="cn-grid" id="cn-grid"></div>
+  <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center">
+    <button class="btn-action" onclick="startCustomNight()">🌙 Iniciar Noite Custom</button>
+    <button class="btn-action" onclick="showMenu()">🏠 Voltar</button>
+  </div>
+</div>
+
+<!-- ══ MINIGAME ══ -->
+<div id="screen-minigame" class="screen">
+  <!-- Seletor de jogo -->
+  <div id="mg-selector">
+    <h2 style="color:#0f0;margin-bottom:16px">🎮 Mini-jogos</h2>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center">
+      <div class="mg-card" onclick="selectMG('pizza')">
+        <div style="font-size:2.5em">🍕</div>
+        <div style="color:#0f0;font-weight:bold;margin:6px 0">Pizza Rush</div>
+        <div style="color:#0a0;font-size:.75em">Pegue as pizzas!<br>Desvie das caveiras.<br>↔ Mover · Click</div>
+      </div>
+      <div class="mg-card" onclick="selectMG('meteor')">
+        <div style="font-size:2.5em">☄️</div>
+        <div style="color:#0f0;font-weight:bold;margin:6px 0">Meteor Storm</div>
+        <div style="color:#0a0;font-size:.75em">Atire nos meteoros!<br>Proteja a pizzaria.<br>← → Mover · Espaço Atirar</div>
+      </div>
+    </div>
+    <button class="btn-action" style="margin-top:18px" onclick="showMenu()">🏠 Voltar ao Menu</button>
+  </div>
+  <!-- Arena do jogo ativo -->
+  <div id="mg-arena" style="display:none;flex-direction:column;align-items:center;gap:8px">
+    <h2 id="mg-title" style="color:#0f0;font-size:1.2em"></h2>
+    <div id="mg-hud">
+      <span>Pontos: <b id="mg-score">0</b></span>
+      <span>Vidas: <b id="mg-lives">3</b></span>
+      <span>Tempo: <b id="mg-time">30</b>s</span>
+    </div>
+    <canvas id="mg-canvas" width="420" height="280"></canvas>
+    <div id="mg-result"></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn-action" id="mg-play-btn" onclick="startActiveMG()">▶ Jogar</button>
+      <button class="btn-action" onclick="backToMGSelector()">◀ Voltar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STORY OVERLAY ══ -->
+<div id="story-overlay">
+  <div id="story-box">
+    <div id="story-portrait">🐻</div>
+    <div id="story-speaker">GERENTE</div>
+    <div id="story-text"></div>
+    <div id="story-choices"></div>
+  </div>
+</div>
+
+<!-- ══ VHS OVERLAY ══ -->
+<div class="vhs-overlay" id="vhs-overlay">
+  <div class="vhs-line"></div>
+  <div class="vhs-noise"></div>
+  <div class="vhs-rgb"></div>
+</div>
+
+<!-- ══ CURTAIN ══ -->
+<div id="curtain"></div>
+
+<!-- ══ FX OVERLAY (efeitos visuais sem Phaser) ══ -->
+<div id="fx-overlay">
+  <div id="fx-black"></div>
+  <img id="fx-char" src="" alt="">
+  <div id="fx-static"></div>
+  <div id="fx-bang-left"></div>
+  <div id="fx-bang-right"></div>
+  <div id="fx-win"></div>
+  <div id="fx-heat"></div>
+</div>
+
+<!-- ══ ACHIEVEMENT POPUP ══ -->
+<div id="achievement-popup"></div>
+
+<!-- ══ TUTORIAL ══ -->
+<div id="tutorial-overlay">
+  <div id="tutorial-box">
+    <div id="tut-progress"></div>
+    <div id="tut-steps"></div>
+    <div class="tut-nav">
+      <button class="btn-action" onclick="tutPrev()">◀ Anterior</button>
+      <button class="btn-action" onclick="tutNext()">Próximo ▶</button>
+      <button class="btn-action" onclick="closeTutorial()">✕ Fechar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════════════
+// FX — Efeitos visuais em CSS/JS puro (sem Phaser)
+// ══════════════════════════════════════════════════════════
+const FX = {
+  _ov:null,_black:null,_char:null,_static:null,_banL:null,_banR:null,_win:null,_heat:null,
+  init(){
+    this._ov   =document.getElementById('fx-overlay');
+    this._black=document.getElementById('fx-black');
+    this._char =document.getElementById('fx-char');
+    this._static=document.getElementById('fx-static');
+    this._banL =document.getElementById('fx-bang-left');
+    this._banR =document.getElementById('fx-bang-right');
+    this._win  =document.getElementById('fx-win');
+    this._heat =document.getElementById('fx-heat');
+  },
+  _show(){if(this._ov)this._ov.classList.add('active')},
+  _hide(){if(this._ov)this._ov.classList.remove('active')},
+  _shake(dur=450){
+    document.body.style.animation='none';
+    document.body.offsetHeight; // reflow
+    document.body.style.animation=`fxShake ${dur}ms ease-in-out`;
+    setTimeout(()=>document.body.style.animation='',dur+50);
+  },
+  _drawStaticFrame(){
+    if(!this._static)return;
+    const c=this._static;
+    const cv=document.createElement('canvas');
+    cv.width=window.innerWidth;cv.height=window.innerHeight;
+    const ctx=cv.getContext('2d');
+    for(let i=0;i<60;i++){
+      const x=Math.random()*cv.width,y=Math.random()*cv.height;
+      const w=Math.random()*140+20,h=Math.random()*4+1;
+      ctx.fillStyle=`rgba(255,255,255,${Math.random()*.35})`;
+      ctx.fillRect(x,y,w,h);
+    }
+    c.innerHTML='';
+    cv.style.cssText='position:absolute;inset:0;width:100%;height:100%';
+    c.appendChild(cv);
+    setTimeout(()=>c.innerHTML='',90);
+  },
+  doJumpscare(charKey){
+    this._show();
+    // Fade to black
+    this._black.style.opacity='0.9';
+    this._drawStaticFrame();
+    this._shake(750);
+    // Show character with animation
+    const src=charKey+'.png';
+    this._char.src=src;
+    this._char.style.animation='none';
+    this._char.offsetHeight;
+    this._char.style.animation='fxCharIn 420ms ease-out forwards';
+    this._char.style.opacity='1';
+    // Hide after 720ms
+    setTimeout(()=>{
+      this._black.style.opacity='0';
+      this._char.style.opacity='0';
+      this._hide();
+      if(typeof showScreen==='function') showScreen('screen-gameover');
+    },720);
+  },
+  doBangFlash(side){
+    this._show();
+    this._shake(280);
+    const el=side==='left'?this._banL:this._banR;
+    if(!el)return;
+    el.style.background='rgba(255,0,0,0.45)';
+    setTimeout(()=>{el.style.background='rgba(255,0,0,0)';this._hide()},220);
+  },
+  doPowerOut(){
+    this._show();
+    let cnt=0;
+    const iv=setInterval(()=>{
+      this._black.style.opacity=cnt%2===0?'0.88':'0.04';
+      cnt++;
+      if(cnt>=14){
+        clearInterval(iv);
+        this._black.style.opacity='1';
+        setTimeout(()=>{
+          this._black.style.opacity='0';
+          this._hide();
+          if(typeof showScreen==='function') showScreen('screen-gameover');
+        },1050);
+      }
+    },160);
+  },
+  doOverheat(){
+    this._show();
+    this._heat.style.background='rgba(255,120,0,0.55)';
+    setTimeout(()=>{this._heat.style.background='rgba(255,120,0,0)';this._hide()},500);
+  },
+  doWinFlash(){
+    this._show();
+    this._win.style.background='rgba(0,255,80,0.45)';
+    setTimeout(()=>{this._win.style.background='rgba(0,255,80,0)';this._hide()},400);
+  },
+};
+// Alias para compatibilidade com chamadas window.SCENE.*
+window.SCENE={
+  doJumpscare:(k)=>FX.doJumpscare(k),
+  doBangFlash:(s)=>FX.doBangFlash(s),
+  doPowerOut:()=>FX.doPowerOut(),
+  doOverheat:()=>FX.doOverheat(),
+  doWinFlash:()=>FX.doWinFlash(),
+};
+
+// ══════════════════════════════════════════════════════════
+// SOM — Web Audio API (tudo em try/catch)
+// ══════════════════════════════════════════════════════════
+const SFX = (() => {
+  let ctx=null, ambSrc=null, humNode=null, beatNode=null, _extra=null;
+  function ac(){
+    if(!ctx) ctx=new(window.AudioContext||window.webkitAudioContext)();
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  }
+  function tone(f,d,v=.3,t='sine',delay=0){
+    try{const c=ac(),T=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,T);g.gain.exponentialRampToValueAtTime(.0001,T+d);o.start(T);o.stop(T+d+.05)}catch(e){}
+  }
+  function noise(d,v=.15,lp=8000,delay=0){
+    try{const c=ac(),T=c.currentTime+delay,n=Math.ceil(c.sampleRate*Math.max(.01,d)),buf=c.createBuffer(1,n,c.sampleRate),da=buf.getChannelData(0);for(let i=0;i<n;i++)da[i]=Math.random()*2-1;const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=buf;f.type='lowpass';f.frequency.value=lp;s.connect(f);f.connect(g);g.connect(c.destination);g.gain.setValueAtTime(v,T);g.gain.exponentialRampToValueAtTime(.0001,T+d);s.start(T)}catch(e){}
+  }
+  return {
+    init(){try{ac()}catch(e){}},
+    light(){noise(.04,.1,12000);tone(1200,.05,.07,'square')},
+    door(cl){
+      try{const c=ac(),T=c.currentTime,o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.setValueAtTime(cl?90:130,T);o.frequency.exponentialRampToValueAtTime(cl?35:65,T+.18);g.gain.setValueAtTime(.5,T);g.gain.exponentialRampToValueAtTime(.0001,T+.35);o.start(T);o.stop(T+.4)}catch(e){}
+      noise(.12,.15,2000)},
+    fan(){noise(.08,.06,400);tone(120,.1,.05,'sine')},
+    camFlip(){noise(.07,.18,5000);tone(2000,.04,.05,'square')},
+    step(){tone(55,.18,.25,'sine');noise(.06,.06,800)},
+    bang(){
+      try{const c=ac(),T=c.currentTime;[0,.13,.26].forEach(dt=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=45;g.gain.setValueAtTime(.6,T+dt);g.gain.exponentialRampToValueAtTime(.0001,T+dt+.12);o.start(T+dt);o.stop(T+dt+.18)})}catch(e){}
+      noise(.06,.22,1200)},
+    lowPower(){tone(900,.1,.18,'square')},
+    powerOut(){
+      try{const c=ac(),T=c.currentTime,o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.setValueAtTime(220,T);o.frequency.exponentialRampToValueAtTime(18,T+2);g.gain.setValueAtTime(.4,T);g.gain.exponentialRampToValueAtTime(.0001,T+2.3);o.start(T);o.stop(T+2.5)}catch(e){}
+      noise(1.8,.1,600)},
+    jumpscare(){noise(1,.65,16000);[180,900,1800,3500,900,1800].forEach((f,i)=>tone(f,.22,.4,'sawtooth',i*.05))},
+    nightWin(){[523,659,784,1047,784,1047].forEach((f,i)=>tone(f,.28,.22,'sine',i*.22))},
+    foxyCome(){// Foxy running sound — rapid footsteps
+      try{const c=ac(),T=c.currentTime;for(let i=0;i<6;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=70+i*5;g.gain.setValueAtTime(.4,T+i*.12);g.gain.exponentialRampToValueAtTime(.0001,T+i*.12+.1);o.start(T+i*.12);o.stop(T+i*.12+.15)}}catch(e){}},
+    ventCrawl(){tone(40,.3,.15,'sine');noise(.1,.05,300)},
+    // #23 Passos com volume por proximidade
+    stepProx(vol=0.25){try{const c=ac(),T=c.currentTime,o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=55;g.gain.setValueAtTime(vol,T);g.gain.exponentialRampToValueAtTime(.0001,T+.18);o.start(T);o.stop(T+.22);noise(.06,vol*.4,800)}catch(e){}},
+    // #25 Guitarra do Bonnie no palco
+    guitar(){try{const c=ac(),T=c.currentTime;const freqs=[196,247,330,392,494];freqs.forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sawtooth';o.frequency.value=f;g.gain.setValueAtTime(.18,T+i*.06);g.gain.exponentialRampToValueAtTime(.0001,T+i*.06+.4);o.start(T+i*.06);o.stop(T+i*.06+.5)})}catch(e){}},
+    // #28 Sino das 6h
+    sixAmBell(){try{const c=ac(),T=c.currentTime;for(let i=0;i<6;i++){const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=880-i*40;g.gain.setValueAtTime(.35,T+i*.55);g.gain.exponentialRampToValueAtTime(.0001,T+i*.55+.5);o.start(T+i*.55);o.stop(T+i*.55+.6)}}catch(e){}},
+    // #22 Respiração do jogador
+    _breathNode:null,_breathGain:null,
+    startBreathing(){
+      this.stopBreathing();
+      try{const c=ac();
+        const lfo=c.createOscillator(),lfoG=c.createGain();
+        lfo.type='sine';lfo.frequency.value=0.28;lfoG.gain.value=0.02;
+        const osc=c.createOscillator(),g=c.createGain();
+        osc.type='sine';osc.frequency.value=200;g.gain.value=0.0;
+        lfo.connect(lfoG);lfoG.connect(g.gain);
+        osc.connect(g);g.connect(c.destination);
+        lfo.start();osc.start();
+        this._breathNode=osc;this._breathGain=g;
+      }catch(e){}},
+    setBreathingDanger(d){try{if(this._breathGain)this._breathGain.gain.value=Math.min(0.06,d*0.015)}catch(e){}},
+    stopBreathing(){try{if(this._breathNode){this._breathNode.stop();this._breathNode=null;this._breathGain=null}}catch(e){}},
+    startAmbient(night=1){
+      this.stopAmbient();
+      try{
+        const c=ac();
+        const len=Math.ceil(c.sampleRate*3),buf=c.createBuffer(1,len,c.sampleRate),d=buf.getChannelData(0);
+        for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*.016;
+        ambSrc=c.createBufferSource(); ambSrc.buffer=buf; ambSrc.loop=true;
+        const flt=c.createBiquadFilter(),ag=c.createGain();
+        flt.type='lowpass'; flt.frequency.value=350+night*40; ag.gain.value=.9;
+        ambSrc.connect(flt); flt.connect(ag); ag.connect(c.destination); ambSrc.start();
+        humNode=c.createOscillator(); const hg=c.createGain();
+        humNode.connect(hg); hg.connect(c.destination);
+        humNode.type='sine'; humNode.frequency.value=55+night*8; hg.gain.value=.03+night*.005;
+        humNode.start();
+        if(night>=4){_extra=c.createOscillator();const g2=c.createGain();_extra.connect(g2);g2.connect(c.destination);_extra.type='sine';_extra.frequency.value=58+night*7;g2.gain.value=.015;_extra.start()}
+      }catch(e){}
+    },
+    startHeartbeat(bpm){
+      this.stopHeartbeat();
+      try{
+        const c=ac(),interval=60/bpm;
+        const beat=()=>{try{tone(60,.05,.3,'sine');tone(45,.08,.2,'sine',.06)}catch(e){}};
+        beat();
+        beatNode=setInterval(beat,interval*1000);
+      }catch(e){}
+    },
+    stopHeartbeat(){if(beatNode){clearInterval(beatNode);beatNode=null}},
+    stopAmbient(){
+      [ambSrc,humNode,_extra].forEach(n=>{try{if(n)n.stop()}catch(e){}});
+      ambSrc=null;humNode=null;_extra=null;
+      this.stopHeartbeat();
+    },
+  };
+})();
+document.addEventListener('click', ()=>SFX.init(),{once:true});
+document.addEventListener('keydown',()=>SFX.init(),{once:true});
+
+// ══════════════════════════════════════════════════════════
+// VOZ + SUSSURROS
+// ══════════════════════════════════════════════════════════
+function speak(text){
+  if(!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  const v=getPtVoice(); if(v) u.voice=v;
+  u.lang='pt-BR'; u.rate=.85; u.pitch=.75; speechSynthesis.speak(u);
+}
+
+const WHISPERS=['Oi.','Vem cá.','Quem é você aí na câmera?','Eu te vejo.','Tá escuro aqui.','Por que você tá me olhando?','A câmera não vai te proteger.','Eu sei que você tá aí.','Fica quietinho.','Apaga essa câmera.','Você não deveria estar aqui.','Ei. Ei você.','Quanto tempo você vai ficar aí?'];
+const CHAR_W={freddy:['Boa noite.','Você não deveria estar aqui.','Toc, toc.','A festa acabou.'],bonnie:['Ei. Me abre essa porta.','Eu toco guitarra. E bato em portas.','Vem brincar comigo.'],chica:['Quer pizza?','A cozinha tá quentinha.','Vem jantar comigo.'],foxy:['Eu vi você me olhando.','Arrr... parece que você me achou.','Prepare-se para correr.']};
+
+let _ptVoice=null;
+function getPtVoice(){
+  if(_ptVoice) return _ptVoice;
+  const vs=window.speechSynthesis?speechSynthesis.getVoices():[];
+  _ptVoice=vs.find(v=>v.lang==='pt-BR'&&/female|feminina/i.test(v.name))||vs.find(v=>v.lang==='pt-BR')||vs.find(v=>v.lang.startsWith('pt'))||vs[0]||null;
+  return _ptVoice;
+}
+if(window.speechSynthesis){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{_ptVoice=null;getPtVoice()}}
+
+let lastWhisper=0;
+function tryWhisper(charId=null){
+  if(!window.speechSynthesis) return;
+  const now=Date.now();
+  if(now-lastWhisper<12000) return;
+  if(Math.random()>.45) return;
+  lastWhisper=now;
+  const phrases=charId&&CHAR_W[charId]?CHAR_W[charId]:WHISPERS;
+  const text=phrases[Math.floor(Math.random()*phrases.length)];
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  const v=getPtVoice(); if(v) u.voice=v;
+  u.lang='pt-BR'; u.rate=.78+Math.random()*.12; u.pitch=.88+Math.random()*.18; u.volume=.8+Math.random()*.15;
+  speechSynthesis.speak(u);
+}
+
+// ══════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════
+const NIGHT_DUR = 360;
+const SECS_PH   = NIGHT_DUR / 6;
+const BASE_DRAIN= [0,.035,.055,.075,.100,.130];
+const CAM_DRAIN = .07, DOOR_DRAIN=.10, LIGHT_DRAIN=.07, FAN_DRAIN=.08;
+const TEMP_RISE = .12;   // °C/s base
+const TEMP_FAN  = -.30;  // °C/s when fan on
+const TEMP_CAM  = .04;   // °C/s extra when cam on
+
+const MOVE_SPEED={
+  freddy:[999,65,45,28,18],
+  bonnie:[85,55,38,22,13],
+  chica: [999,999,48,30,18],
+  foxy:  [999,90,65,40,25], // time between "peek" advances
+  mangle:[999,80,60,38,22], // duct crawler
+};
+
+const CHAR_DEF={
+  freddy:{name:'Freddy Fofofo',  emoji:'🐻',img:'freddy.png',side:'left', path:['stage','dining','left_hall','left_door']},
+  bonnie:{name:'Bonnie Coelho',  emoji:'🐰',img:'bonnie.png',side:'right',path:['stage2','kitchen','right_hall','right_door']},
+  chica: {name:'Chica Garotinha',emoji:'🐥',img:'chica.png', side:'left', path:['dining','left_hall','left_door']},
+};
+
+const FOXY_STAGES=['stage_cove','peek1','peek2','running']; // Pirate Cove stages
+const DUCT_PATH=['duct_left','duct_center','duct_right','duct_exit'];
+
+const ROOMS={
+  stage:     {label:'CAM 1A — Palco',        desc:'Aqui eles começam ao acordar.',      bg:'rb-stage',    furn:'🎤🎸'},
+  stage2:    {label:'CAM 1D — Palco 2',       desc:'Palco secundário. Bonnie pratica.',  bg:'rb-stage',    furn:'🎸🎵'},
+  cove:      {label:'CAM 1C — Covil do Foxy', desc:'Olhe com cuidado...',               bg:'rb-cove',     furn:'🎪'},
+  dining:    {label:'CAM 1B — Refeitório',    desc:'Mesas e cadeiras vazias.',           bg:'rb-dining',   furn:'🍕🪑'},
+  kitchen:   {label:'CAM 6 — Cozinha',        desc:'Câmera desativada.',                bg:'rb-kitchen',  furn:''},
+  backstage: {label:'CAM 5 — Bastidores',     desc:'Peças e trajes extras.',             bg:'rb-backstage',furn:'🎭'},
+  prize:     {label:'CAM 3 — Sala de Prêmios',desc:'Troféus e brinquedos... e silêncio.',bg:'rb-backstage',furn:'🏆🎁'},
+  left_hall: {label:'CAM 2A — Corredor Esq',  desc:'Escuro e estreito.',                bg:'rb-hall',     furn:''},
+  right_hall:{label:'CAM 4A — Corredor Dir',  desc:'Você ouve passos...',               bg:'rb-hall',     furn:''},
+  left_door: {label:'CAM 2B — Porta Esq',    desc:'ELE ESTÁ NA PORTA!',                bg:'rb-door',     furn:''},
+  right_door:{label:'CAM 4B — Porta Dir',    desc:'ELA ESTÁ NA PORTA!',                bg:'rb-door',     furn:''},
+  duct_left: {label:'DUTO — Seção Esq',      desc:'Parece quieto por aqui.',            bg:'rb-vent',     furn:''},
+  duct_center:{label:'DUTO — Centro',        desc:'Você ouve um barulho metálico...',   bg:'rb-vent',     furn:''},
+  duct_right:{label:'DUTO — Seção Dir',      desc:'ESTÁ CHEGANDO!',                    bg:'rb-vent',     furn:''},
+};
+
+const CAM_ROOMS_LIST=[
+  {id:'cam1a',room:'stage'},   {id:'cam1d',room:'stage2'},
+  {id:'cam1c',room:'cove'},    {id:'cam1b',room:'dining'},
+  {id:'cam6', room:'kitchen'}, {id:'cam3', room:'prize'},
+  {id:'cam5', room:'backstage'},{id:'cam2a',room:'left_hall'},
+  {id:'cam4a',room:'right_hall'},{id:'cam2b',room:'left_door'},
+  {id:'cam4b',room:'right_door'},
+];
+const DUCT_CAM_LIST=[
+  {id:'duct1',room:'duct_left'},{id:'duct2',room:'duct_center'},{id:'duct3',room:'duct_right'},
+];
+
+const NIGHT_TITLES=['','Noite 1','Noite 2','Noite 3','Noite 4','⚠️ Noite 5 — A Última!','💀 Noite 6 — Pesadelo'];
+const NIGHT_TIPS=['','Dica: câmeras + feche as portas + ventile!','Eles aprenderam...','Chica e Foxy acordaram!','Rápidos demais. Cuide da temperatura!','Última chance. Sobreviva até as 6h!','Você não deveria estar aqui...'];
+const WIN_MSGS=['','Você tem talento!','Mais espertos, mas você é melhor!','Três noites! Impressionante!','Quase lá — só mais uma!','5 NOITES! VOCÊ É LENDÁRIO!','NOITE 6 COMPLETA! VOCÊ É O ESCOLHIDO!'];
+const RANDOM_EVENTS=[
+  {name:'Queda de energia',msg:'⚡ QUEDA DE ENERGIA! Consumo 2× por 20s',action:'power_spike'},
+  {name:'Câmera com falha',msg:'📡 CÂMERA COM FALHA por 15s',action:'cam_static'},
+  {name:'Porta emperrada',msg:'🚪 PORTA ESQ EMPERRADA por 8s',action:'door_stuck'},
+  {name:'Sobreaquecimento',msg:'🔥 SOBREAQUECIMENTO! +5°C instantâneo',action:'heat_spike'},
+];
+
+// ══════════════════════════════════════════════════════════
+// CFG + MODO
+// ══════════════════════════════════════════════════════════
+let CFG={speedMult:1,drainMult:1,mode:'5nights'};
+let currentTab='cameras';
+
+function setMode(m){
+  CFG.mode=m;
+  document.getElementById('mode-5n').classList.toggle('active',m==='5nights');
+  document.getElementById('mode-en').classList.toggle('active',m==='endless');
+}
+function setTheme(t){
+  document.body.className=t;
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  const themes=['','theme-red','theme-blue'];
+  const idx=themes.indexOf(t);
+  document.querySelectorAll('.tbtn')[idx]?.classList.add('active');
+  try{localStorage.setItem('fnaf_theme',t)}catch(e){}
+}
+function initSliders(){
+  const sp=document.getElementById('sl-speed'),dr=document.getElementById('sl-drain');
+  const upd=()=>{
+    CFG.speedMult=+sp.value; CFG.drainMult=+dr.value;
+    document.getElementById('sl-speed-lbl').textContent=sp.value==1?'Normal':sp.value>1?`Lento (${sp.value}×)`:`Rápido (${sp.value}×)`;
+    document.getElementById('sl-drain-lbl').textContent=dr.value==1?'Normal':dr.value>1?`Rápido (${dr.value}×)`:`Lento (${dr.value}×)`;
+  };
+  sp.addEventListener('input',upd); dr.addEventListener('input',upd);
+}
+
+// ══════════════════════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════════════════════
+let G={};
+function initState(night){
+  G={
+    night,time:0,power:100,temperature:20,
+    phase:'playing',
+    cameraOpen:false,activeCam:'cam1a',
+    leftDoor:false,rightDoor:false,leftLight:false,rightLight:false,
+    fanOn:false,
+    interval:null,
+    panicLeft:0,panicRight:0,
+    doorStuckLeft:false,doorStuckTimer:0,
+    powerSpike:false,powerSpikeTimer:0,
+    camStaticTimer:0,
+    randomEventTimer:Math.floor(60+Math.random()*30),
+    powerupTimer:120,powerupActive:false,
+    sealVentAvailable:false,ventSealed:false,
+    foxyStage:0,foxyTimer:0,foxySpeed:MOVE_SPEED.foxy[night-1]*CFG.speedMult,foxyGlances:0,foxyBlocked:0,
+    mangle:{posIdx:0,timer:0,speed:MOVE_SPEED.mangle[night-1]*CFG.speedMult,active:night>=2,transitioning:false,transTimer:0},
+    chars:{
+      freddy:{posIdx:0,timer:0,speed:MOVE_SPEED.freddy[night-1]*CFG.speedMult,active:true,transitioning:false,transTimer:0},
+      bonnie:{posIdx:0,timer:0,speed:MOVE_SPEED.bonnie[night-1]*CFG.speedMult,active:true,transitioning:false,transTimer:0},
+      chica: {posIdx:0,timer:0,speed:MOVE_SPEED.chica[night-1]*CFG.speedMult, active:night>=3,transitioning:false,transTimer:0},
+    },
+    stats:{doors:0,cams:0,bangs:0,minPower:100,maxTemp:20,foxyBlocked:0,panicSecs:0,
+           mvFreddy:0,mvBonnie:0,mvChica:0,mvMangle:0,
+           blocked:{freddy:0,bonnie:0,chica:0,foxy:0,mangle:0}},
+    heatmap:{stage:0,stage2:0,cove:0,dining:0,kitchen:0,backstage:0,prize:0,
+             left_hall:0,right_hall:0,left_door:0,right_door:0},
+    events:[],
+    freddyCamTimer:0,
+    bonnieCamHidden:false,
+    guardHp:100,        // HP do segurança — cai com calor, sobe no frescor
+  };
+  // Bonus power from mini-game (#43)
+  if(typeof G_BONUS_POWER!=='undefined'&&G_BONUS_POWER>0){G.power=Math.min(120,100+G_BONUS_POWER);G_BONUS_POWER=0}
+  // Nightmare mode: boost all speeds to maximum
+  if(typeof NIGHTMARE_MODE!=='undefined'&&NIGHTMARE_MODE){
+    G.chars.freddy.speed=Math.min(G.chars.freddy.speed,18);
+    G.chars.bonnie.speed=Math.min(G.chars.bonnie.speed,13);
+    G.chars.chica.active=true; G.chars.chica.speed=Math.min(G.chars.chica.speed,18);
+    G.foxySpeed=Math.min(G.foxySpeed,20);
+    G.mangle.active=true; G.mangle.speed=Math.min(G.mangle.speed,18);
+  }
+  // Aplicar modificadores de story
+  if(typeof STORY_MODS!=='undefined'){
+    const sm=STORY_MODS.speedMult||1;
+    if(sm!==1){
+      Object.values(G.chars).forEach(ch=>{if(ch.speed<990)ch.speed=Math.max(5,Math.round(ch.speed/sm));});
+      G.foxySpeed=Math.max(8,Math.round(G.foxySpeed/sm));
+    }
+    if(STORY_MODS.freddySlow&&G.chars.freddy.speed<990) G.chars.freddy.speed=Math.round(G.chars.freddy.speed*1.35);
+    if(STORY_MODS.foxyFast) G.foxySpeed=Math.max(10,Math.round(G.foxySpeed*0.75));
+    if(STORY_MODS.hpStartBonus>0) G.guardHp=Math.min(100,100+STORY_MODS.hpStartBonus);
+    // Reset single-use mods
+    STORY_MODS={speedMult:1,powerBonus:0,doorBonus:false,foxyFast:false,hpStartBonus:0,tempSlowDrain:false,freddySlow:false};
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// TELAS
+// ══════════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el)el.classList.add('active');
+  document.dispatchEvent(new CustomEvent('fnaf-screen-shown',{detail:id}));
+}
+function showMenu(){stopGame();renderScores();showScreen('screen-menu')}
+
+// ══════════════════════════════════════════════════════════
+// INÍCIO / PARAR
+// ══════════════════════════════════════════════════════════
+function startGame(){startNight(1)}
+function startNight(night){
+  stopGame();
+  document.getElementById('ni-title').textContent=NIGHT_TITLES[Math.min(night,6)];
+  document.getElementById('ni-tip').textContent=NIGHT_TIPS[Math.min(night,6)];
+  showScreen('screen-nightintro');
+  setTimeout(()=>{
+    initState(night);
+    buildCamGrid();
+    resetUI();
+    showScreen('screen-game');
+    try{SFX.startAmbient(night)}catch(e){}
+    try{SFX.startBreathing()}catch(e){} // #22
+    updateHeartbeat();
+    G.interval=setInterval(gameTick,1000);
+  },2800);
+}
+function stopGame(){
+  if(G.interval){clearInterval(G.interval);G.interval=null}
+  try{SFX.stopAmbient()}catch(e){}
+  try{SFX.stopBreathing()}catch(e){} // #22
+}
+function retryNight(){startNight(G.night)}
+function nextNight(){
+  if(CFG.mode==='endless'){startNight(G.night+1);return}
+  if(G.night>=5){showScreen('screen-gamewin');return}
+  const next=G.night+1;
+  // Story guiada entre noites (só nas 5 noites principais)
+  showStoryAfterNight(G.night,()=>startNight(next));
+}
+function showSalary(){
+  const amounts=[0,120,120,130,150,200,350];
+  const msgs=['','Você trabalhou a noite toda por quase nada. Mas sobreviveu!','A pizzaria está satisfeita... por enquanto.','Seu chefe disse: "Continue assim."','Você é o melhor segurança que já tivemos. (E o mais barato.)','Você merecia mais. Muito mais.','Noite Lendária. O gerente chorou de medo de você.'];
+  const night=Math.min(G.night,6);
+  const finalAmt=amounts[night];
+  document.getElementById('salary-msg').textContent=msgs[night];
+  showScreen('screen-salary');
+  // Animated count-up
+  let current=0;
+  const el=document.getElementById('salary-amount');
+  const step=Math.ceil(finalAmt/30);
+  const ticker=setInterval(()=>{
+    current=Math.min(current+step,finalAmt);
+    el.textContent=`R$ ${current},00`;
+    if(current>=finalAmt) clearInterval(ticker);
+  },35);
+}
+
+// ══════════════════════════════════════════════════════════
+// TICK PRINCIPAL
+// ══════════════════════════════════════════════════════════
+function gameTick(){
+  if(G.phase!=='playing') return;
+  G.time++;
+
+  // Power drain
+  let drain=(BASE_DRAIN[Math.min(G.night,5)]*CFG.drainMult)*(G.powerSpike?2:1);
+  if(G.cameraOpen) drain+=CAM_DRAIN;
+  if(G.leftDoor)   drain+=DOOR_DRAIN;
+  if(G.rightDoor)  drain+=DOOR_DRAIN;
+  if(G.leftLight)  drain+=LIGHT_DRAIN;
+  if(G.rightLight) drain+=LIGHT_DRAIN;
+  if(G.fanOn)      drain+=FAN_DRAIN;
+  G.power=Math.max(0,G.power-drain);
+  G.stats.minPower=Math.min(G.stats.minPower,G.power);
+  if(G.power<=0){triggerPowerOut();return}
+
+  // Temperature
+  let tempDelta=TEMP_RISE;
+  if(G.fanOn)      tempDelta+=TEMP_FAN;
+  if(G.cameraOpen) tempDelta+=TEMP_CAM;
+  G.temperature=Math.max(18,Math.min(100,G.temperature+tempDelta));
+  G.stats.maxTemp=Math.max(G.stats.maxTemp,G.temperature);
+  if(G.temperature>=100){triggerOverheat();return}
+
+  // Timers
+  if(G.powerSpike){G.powerSpikeTimer--;if(G.powerSpikeTimer<=0)G.powerSpike=false}
+  if(G.camStaticTimer>0) G.camStaticTimer--;
+  if(G.doorStuckLeft){G.doorStuckTimer--;if(G.doorStuckTimer<=0){G.doorStuckLeft=false;addEvent('Porta desbloqueada','')}}
+
+  // Powerup
+  G.powerupTimer--;
+  if(G.powerupTimer<=0&&!G.powerupActive){
+    G.powerupActive=true;
+    document.getElementById('powerup-btn').style.display='block';
+    G.powerupTimer=120;
+  }
+
+  // Random events
+  G.randomEventTimer--;
+  if(G.randomEventTimer<=0){
+    triggerRandomEvent();
+    G.randomEventTimer=Math.floor(60+Math.random()*50);
+  }
+
+  // Alerts
+  if(G.power<20&&G.time%5===0){SFX.lowPower();if(G.time%15===0)speak('Atenção! Energia crítica!')}
+  if(G.temperature>75&&G.time%8===0) speak('Temperatura alta! Ligue o ventilador!');
+
+  // ── Heatmap: rastrear presença por sala (#32) ──────────
+  for(const [id,ch] of Object.entries(G.chars)){
+    if(!ch.active) continue;
+    const r=CHAR_DEF[id].path[ch.posIdx];
+    if(G.heatmap[r]!==undefined) G.heatmap[r]++;
+  }
+
+  // ── #2 Freddy personalidade: para quando observado ─────
+  if(G.cameraOpen&&G.chars.freddy.active){
+    const fredRoom=CHAR_DEF.freddy.path[G.chars.freddy.posIdx];
+    const curCamRoom=[...CAM_ROOMS_LIST,...DUCT_CAM_LIST].find(c=>c.id===G.activeCam)?.room;
+    if(curCamRoom===fredRoom){
+      G.freddyCamTimer++;
+      G.chars.freddy.timer=Math.max(0,G.chars.freddy.timer-1); // freio quando observado
+      // #8 Easter egg: Freddy canta após 30s na câmera
+      if(G.freddyCamTimer===30) speak('Parabéns a você... não vai escapar de mim!');
+    } else {
+      G.freddyCamTimer=0;
+    }
+  }
+
+  // ── #10 Bonnie desaparece da câmera aleatoriamente ─────
+  G.bonnieCamHidden=(G.chars.bonnie.active&&Math.random()<0.08);
+
+  // ── #3 Ataques coordenados ─────────────────────────────
+  const lDoorChar=charAtPos('left_door'), rDoorChar=charAtPos('right_door');
+  if(lDoorChar&&rDoorChar&&!G.leftDoor&&!G.rightDoor&&Math.random()<0.08){
+    triggerGameOver(getCharAtRoom('left_door')?.name+' e '+getCharAtRoom('right_door')?.name);
+    return;
+  }
+
+  // Char transitions
+  for(const ch of Object.values(G.chars)){
+    if(!ch.active||!ch.transitioning) continue;
+    ch.transTimer--; if(ch.transTimer<=0) ch.transitioning=false;
+  }
+  if(G.mangle.active&&G.mangle.transitioning){G.mangle.transTimer--;if(G.mangle.transTimer<=0)G.mangle.transitioning=false}
+
+  // Move chars
+  for(const [id,ch] of Object.entries(G.chars)){
+    if(!ch.active) continue;
+    ch.timer++; if(ch.timer>=ch.speed){ch.timer=0;moveChar(id,ch)}
+  }
+  // Foxy
+  tickFoxy();
+  // Mangle (duct)
+  if(G.mangle.active){G.mangle.timer++;if(G.mangle.timer>=G.mangle.speed){G.mangle.timer=0;moveMangle()}}
+
+  // Panic
+  const lDoor=charAtPos('left_door'), rDoor=charAtPos('right_door');
+  if(lDoor&&!G.leftDoor){G.panicLeft++;G.stats.panicSecs++}else G.panicLeft=0;
+  if(rDoor&&!G.rightDoor){G.panicRight++;G.stats.panicSecs++}else G.panicRight=0;
+  const oc=document.getElementById('office-center');
+  if(G.temperature>85) oc.className='overheat';
+  else if(G.panicLeft&&G.panicRight) oc.className='panic-both';
+  else if(G.panicLeft)  oc.className='panic-left';
+  else if(G.panicRight) oc.className='panic-right';
+  else oc.className='';
+
+  // Seal vent
+  const ventAtExit=G.mangle.active&&DUCT_PATH[G.mangle.posIdx]==='duct_right';
+  G.sealVentAvailable=ventAtExit&&!G.ventSealed;
+  document.getElementById('seal-vent-btn').classList.toggle('show',G.sealVentAvailable);
+
+  // Heartbeat + breathing danger (#22)
+  if(G.time%10===0) updateHeartbeat();
+  {let bd=0;if(G.power<30)bd+=2;if(G.panicLeft||G.panicRight)bd+=3;if(G.foxyStage>=2)bd+=2;try{SFX.setBreathingDanger(bd)}catch(e){}}
+  // Guitar do Bonnie no palco (#25)
+  if(G.time%8===0&&G.cameraOpen){const cr=[...CAM_ROOMS_LIST].find(c=>c.id===G.activeCam)?.room;if(cr==='stage2'&&G.chars.bonnie.active&&CHAR_DEF.bonnie.path[G.chars.bonnie.posIdx]==='stage2')try{SFX.guitar()}catch(e){}}
+
+  if(G.time>=NIGHT_DUR){triggerNightWin();return}
+
+  // Baby mode: prevent power loss below 5%
+  if(typeof BABY_MODE!=='undefined'&&BABY_MODE) G.power=Math.max(G.power,5);
+
+  updateHUD();
+  updateOffice();
+  if(G.cameraOpen){updateCamFeed();updateMiniMap()}
+  updateClock();
+}
+
+// ══════════════════════════════════════════════════════════
+// SISTEMA DE TEMPERATURA
+// ══════════════════════════════════════════════════════════
+function toggleFan(){
+  G.fanOn=!G.fanOn;
+  SFX.fan(); if(G.fanOn) speak('Ventilador ligado.');
+  document.getElementById('btn-fan').classList.toggle('active',G.fanOn);
+}
+function triggerOverheat(){
+  stopGame(); G.phase='gameover';
+  document.getElementById('jumpscare-cont').textContent='🔥';
+  document.getElementById('gameover-msg').textContent='A temperatura atingiu 100°C! O sistema de segurança falhou!';
+  if(window.SCENE) window.SCENE.doOverheat();
+  else setTimeout(()=>showScreen('screen-gameover'),2000);
+}
+
+// ══════════════════════════════════════════════════════════
+// FOXY
+// ══════════════════════════════════════════════════════════
+function tickFoxy(){
+  G.foxyTimer++;
+  if(G.foxyTimer>=G.foxySpeed){
+    G.foxyTimer=0;
+    if(G.foxyStage<3) G.foxyStage++;
+    addEvent(`Foxy: ${['na cova','espreitando','de pé','CORRENDO!'][G.foxyStage]}`,'warn');
+    if(G.foxyStage===3) foxyRun();
+  }
+}
+function foxyRun(){
+  SFX.foxyCome(); speak('Foxy está correndo!');
+  addEvent('🦊 FOXY ESTÁ CORRENDO!','danger');
+  setTimeout(()=>{
+    if(G.phase!=='playing') return;
+    if(G.leftDoor){
+      // Blocked
+      G.foxyStage=0; G.foxyTimer=0; G.foxyBlocked++;
+      G.stats.foxyBlocked++;
+      if(G.stats.blocked) G.stats.blocked.foxy++;
+      addEvent('🦊 Foxy bloqueado pela porta!','warn');
+    } else {
+      triggerGameOver('Foxy 🦊');
+    }
+  },3000);
+}
+function checkFoxyGlance(){
+  if(G.activeCam==='cam1c'){
+    G.foxyGlances++;
+    // Looking resets foxy slightly
+    if(G.foxyStage>0&&Math.random()<.6){G.foxyStage=Math.max(0,G.foxyStage-1);G.foxyTimer=0}
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// MANGLE — dutos
+// ══════════════════════════════════════════════════════════
+function moveMangle(){
+  if(G.ventSealed) return;
+  SFX.ventCrawl();
+  G.stats.mvMangle=(G.stats.mvMangle||0)+1;
+  if(G.mangle.posIdx>=DUCT_PATH.length-1){
+    // Duct exit — attack!
+    triggerGameOver('Mangue 🕷️');
+    return;
+  }
+  G.mangle.posIdx++;
+  G.mangle.transitioning=true; G.mangle.transTimer=2;
+  addEvent(`🕷️ Mangue: ${DUCT_PATH[G.mangle.posIdx]}`,'warn');
+  // Update vent bar
+  const total=DUCT_PATH.length-1;
+  const pct=((total-G.mangle.posIdx)/total*100);
+  const bar=document.getElementById('vent-timer-bar');
+  if(bar){bar.style.width=pct+'%';bar.style.background=pct>60?'#080':pct>30?'#f80':'#f00'}
+}
+function sealVent(){
+  if(!G.sealVentAvailable) return;
+  G.ventSealed=true; G.sealVentAvailable=false;
+  G.mangle.posIdx=0; G.mangle.timer=0;
+  document.getElementById('seal-vent-btn').classList.remove('show');
+  SFX.door(true); speak('Duto selado!');
+  addEvent('🔒 Duto selado — Mangue recuou','');
+  // Vent re-opens after 60s (seal breaks)
+  setTimeout(()=>{if(G.phase==='playing'){G.ventSealed=false;addEvent('🕳️ Vedação do duto falhou!','danger')}},60000);
+}
+
+// ══════════════════════════════════════════════════════════
+// CHAR AI
+// ══════════════════════════════════════════════════════════
+function charAtPos(room){
+  return Object.entries(G.chars).some(([id,ch])=>ch.active&&CHAR_DEF[id].path[ch.posIdx]===room);
+}
+function getCharAtRoom(room){
+  for(const [id,ch] of Object.entries(G.chars)){if(ch.active&&CHAR_DEF[id].path[ch.posIdx]===room)return CHAR_DEF[id]}
+  return null;
+}
+function moveChar(id,ch){
+  const def=CHAR_DEF[id],path=def.path;
+  if(ch.posIdx>=path.length-1){
+    const dc=def.side==='left'?G.leftDoor:G.rightDoor;
+    const stuck=def.side==='left'?G.doorStuckLeft:false;
+    if(dc||stuck){SFX.bang();G.stats.bangs++;if(window.SCENE)window.SCENE.doBangFlash(def.side);if(G.stats.blocked)G.stats.blocked[id]=(G.stats.blocked[id]||0)+1;if(Math.random()<.35)ch.posIdx=Math.max(0,ch.posIdx-1)}
+    else triggerGameOver(def.name+' '+def.emoji);
+    return;
+  }
+  // #23 Step volume por proximidade
+  const _nxtRoom=path[Math.min(ch.posIdx+1,path.length-1)];
+  const _vol={stage:.08,stage2:.08,dining:.08,kitchen:.08,backstage:.08,prize:.08,left_hall:.28,right_hall:.28,left_door:.55,right_door:.55}[_nxtRoom]||.15;
+  try{SFX.stepProx(_vol)}catch(e){try{SFX.step()}catch(e2){}}
+  ch.posIdx++; ch.transitioning=true; ch.transTimer=2;
+  // Per-char move tracking
+  if(id==='freddy') G.stats.mvFreddy=(G.stats.mvFreddy||0)+1;
+  else if(id==='bonnie') G.stats.mvBonnie=(G.stats.mvBonnie||0)+1;
+  else if(id==='chica')  G.stats.mvChica=(G.stats.mvChica||0)+1;
+  addEvent(`${CHAR_DEF[id].emoji} ${CHAR_DEF[id].name.split(' ')[0]} se moveu`,'');
+}
+
+// ══════════════════════════════════════════════════════════
+// RANDOM EVENTS
+// ══════════════════════════════════════════════════════════
+function triggerRandomEvent(){
+  const ev=RANDOM_EVENTS[Math.floor(Math.random()*RANDOM_EVENTS.length)];
+  addEvent('⚠️ '+ev.msg,'danger');
+  speak('Atenção! '+ev.name+'!');
+  switch(ev.action){
+    case'power_spike': G.powerSpike=true; G.powerSpikeTimer=20; break;
+    case'cam_static':  G.camStaticTimer=15; break;
+    case'door_stuck':  if(!G.leftDoor){G.doorStuckLeft=true;G.doorStuckTimer=8} break;
+    case'heat_spike':  G.temperature=Math.min(100,G.temperature+5); break;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// POWERUP
+// ══════════════════════════════════════════════════════════
+function usePowerup(){
+  if(!G.powerupActive) return;
+  G.powerupActive=false;
+  document.getElementById('powerup-btn').style.display='none';
+  G.power=Math.min(100,G.power+25);
+  addEvent('⚡ Energia recarregada +25%','');
+  SFX.nightWin();
+}
+
+// ══════════════════════════════════════════════════════════
+// HEARTBEAT ADAPTATIVO
+// ══════════════════════════════════════════════════════════
+function updateHeartbeat(){
+  let danger=0;
+  if(G.power<30) danger+=2;
+  if(G.power<15) danger+=2;
+  if(G.temperature>70) danger+=1;
+  if(G.temperature>90) danger+=2;
+  if(G.panicLeft>0||G.panicRight>0) danger+=3;
+  if(G.foxyStage>=2) danger+=2;
+  if(G.mangle.posIdx>=2) danger+=2;
+  if(danger<=0){SFX.stopHeartbeat();return}
+  const bpm=50+danger*8;
+  SFX.startHeartbeat(Math.min(bpm,120));
+}
+
+// ══════════════════════════════════════════════════════════
+// EVENT LOG
+// ══════════════════════════════════════════════════════════
+function addEvent(msg,cls=''){
+  if(!G.events) return;
+  const t=Math.floor(G.time/SECS_PH);
+  const hstr=['12AM','1AM','2AM','3AM','4AM','5AM'][Math.min(t,5)];
+  G.events.unshift({msg,cls,t:hstr});
+  if(G.events.length>8) G.events.pop();
+  const log=document.getElementById('event-log');
+  if(!log) return;
+  log.innerHTML=G.events.map(e=>`<div class="ev ${e.cls}">[${e.t}] ${e.msg}</div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// GAME OVER / VITÓRIA
+// ══════════════════════════════════════════════════════════
+function triggerPowerOut(){
+  stopGame(); G.phase='gameover';
+  try{SFX.powerOut()}catch(e){}
+  document.getElementById('jumpscare-cont').textContent='😨';
+  document.getElementById('gameover-msg').textContent='A energia acabou! As portas abriram…';
+  if(window.SCENE) window.SCENE.doPowerOut();
+  else setTimeout(()=>showScreen('screen-gameover'),2500);
+}
+function triggerGameOver(charName){
+  stopGame(); G.phase='gameover';
+  try{SFX.jumpscare()}catch(e){}
+  const EM={Freddy:'🐻',Bonnie:'🐰',Chica:'🐥',Foxy:'🦊',Mangue:'🕷️'};
+  const KEY_MAP={'Freddy':'freddy','Bonnie':'bonnie','Chica':'chica','Foxy':'foxy','Mangue':'mangle'};
+  const ek=Object.keys(EM).find(k=>charName.startsWith(k));
+  document.getElementById('jumpscare-cont').textContent=ek?EM[ek]:'😱';
+  document.getElementById('gameover-msg').textContent=charName+' te pegou!';
+  if(window.SCENE) window.SCENE.doJumpscare(ek?KEY_MAP[ek]:'freddy');
+  else setTimeout(()=>showScreen('screen-gameover'),450);
+}
+function triggerNightWin(){
+  stopGame(); G.phase='nightwin';
+  try{SFX.nightWin()}catch(e){}
+  try{SFX.sixAmBell()}catch(e){} // #28
+  if(window.SCENE) window.SCENE.doWinFlash();
+  saveScore(G.night,G.stats.minPower);
+  const pct=G.stats.minPower,bangs=G.stats.bangs;
+  const gr=calcGrade(pct,bangs);
+  document.getElementById('stats-title').textContent=G.night<5?'🌅 Noite '+G.night+'!':'🏆 ÚLTIMA NOITE!';
+  document.getElementById('stats-night-msg').textContent=WIN_MSGS[Math.min(G.night,6)];
+  document.getElementById('st-doors').textContent=G.stats.doors;
+  document.getElementById('st-cams').textContent=G.stats.cams;
+  document.getElementById('st-bangs').textContent=G.stats.bangs;
+  document.getElementById('st-power').textContent=Math.ceil(G.stats.minPower)+'%';
+  document.getElementById('st-temp').textContent=Math.ceil(G.stats.maxTemp)+'°C';
+  document.getElementById('st-foxy').textContent=G.stats.foxyBlocked+'×';
+  // Per-char blocked (#34)
+  const sv=(el,v)=>{const e=document.getElementById(el);if(e)e.textContent=v||0};
+  if(G.stats.blocked){
+    sv('st-blk-freddy',(G.stats.blocked.freddy||0)+'×');
+    sv('st-blk-bonnie',(G.stats.blocked.bonnie||0)+'×');
+    sv('st-blk-chica',(G.stats.blocked.chica||0)+'×');
+    sv('st-blk-mangle',(G.stats.blocked.mangle||0)+'×');
+  }
+  sv('st-mv-freddy',G.stats.mvFreddy); sv('st-mv-bonnie',G.stats.mvBonnie);
+  sv('st-mv-chica',G.stats.mvChica);   sv('st-mv-mangle',G.stats.mvMangle);
+  const gEl=document.getElementById('stats-grade');
+  gEl.textContent=gr.g; gEl.style.color=gr.c;
+  document.getElementById('stats-grade-label').textContent=gr.l;
+  checkNightAchievements();
+  showScreen('screen-nightstats');
+}
+
+// ══════════════════════════════════════════════════════════
+// CONTROLES
+// ══════════════════════════════════════════════════════════
+function toggleCamera(){
+  G.cameraOpen=!G.cameraOpen;
+  SFX.camFlip();
+  document.getElementById('camera-overlay').classList.toggle('open',G.cameraOpen);
+  document.getElementById('btn-cam-toggle').classList.toggle('active',G.cameraOpen);
+  if(G.cameraOpen){G.stats.cams++;selectCam(G.activeCam);updateMiniMap();setTimeout(()=>tryWhisper(),1500)}
+}
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.cam-tab').forEach((b,i)=>b.classList.toggle('active',i===(tab==='cameras'?0:1)));
+  buildCamGrid();
+  selectCam(tab==='cameras'?'cam1a':'duct1');
+}
+function selectCam(id){
+  if(id!==G.activeCam){SFX.camFlip();G.stats.cams++}
+  G.activeCam=id;
+  document.querySelectorAll('.cam-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('camBtn-'+id)?.classList.add('active');
+  checkFoxyGlance();
+  updateCamFeed(); updateMiniMap();
+  setTimeout(()=>{
+    const visId=Object.entries(G.chars).find(([i,ch])=>ch.active&&!ch.transitioning&&CHAR_DEF[i].path[ch.posIdx]===([...CAM_ROOMS_LIST,...DUCT_CAM_LIST].find(c=>c.id===id)?.room))?.[0];
+    if(visId) tryWhisper(visId);
+  },1800);
+}
+function toggleDoor(side){
+  if(side==='left'){
+    if(G.doorStuckLeft){speak('Porta travada!');return}
+    G.leftDoor=!G.leftDoor; SFX.door(G.leftDoor);
+    speak('Porta esquerda '+(G.leftDoor?'fechada':'aberta'));
+    if(G.leftDoor)G.stats.doors++;
+    document.getElementById('btn-door-left').classList.toggle('active',G.leftDoor);
+    document.getElementById('door-lbl-left').classList.toggle('closed',G.leftDoor);
+    document.getElementById('door-bar-left').classList.toggle('closed',G.leftDoor);
+  }else{
+    G.rightDoor=!G.rightDoor; SFX.door(G.rightDoor);
+    speak('Porta direita '+(G.rightDoor?'fechada':'aberta'));
+    if(G.rightDoor)G.stats.doors++;
+    document.getElementById('btn-door-right').classList.toggle('active',G.rightDoor);
+    document.getElementById('door-lbl-right').classList.toggle('closed',G.rightDoor);
+    document.getElementById('door-bar-right').classList.toggle('closed',G.rightDoor);
+  }
+}
+function toggleLight(side){
+  SFX.light();
+  if(side==='left'){
+    G.leftLight=!G.leftLight;
+    document.getElementById('btn-light-left').classList.toggle('active',G.leftLight);
+    document.getElementById('cone-left').classList.toggle('on',G.leftLight);
+    document.getElementById('hall-left').classList.toggle('lit',G.leftLight);
+  }else{
+    G.rightLight=!G.rightLight;
+    document.getElementById('btn-light-right').classList.toggle('active',G.rightLight);
+    document.getElementById('cone-right').classList.toggle('on',G.rightLight);
+    document.getElementById('hall-right').classList.toggle('lit',G.rightLight);
+  }
+}
+
+// Keyboard shortcuts (P1 + P2 #50)
+let TWO_PLAYER=false;
+function toggleTwoPlayer(on){TWO_PLAYER=on;const el=document.getElementById('hud-2p');if(el)el.style.display=on?'inline':'none'}
+document.addEventListener('keydown',e=>{
+  if(G.phase!=='playing') return;
+  const k=e.key.toLowerCase();
+  // Jogador 1
+  if(k==='q') toggleDoor('left');
+  else if(k==='e') toggleDoor('right');
+  else if(k==='a') toggleLight('left');
+  else if(k==='d') toggleLight('right');
+  else if(k==='c') toggleCamera();
+  else if(k==='f') toggleFan();
+  else if(k==='s') sealVent();
+  else if(k==='escape'&&G.cameraOpen) toggleCamera();
+  // Jogador 2 (#50)
+  else if(TWO_PLAYER){
+    if(k==='u') toggleDoor('left');
+    else if(k==='o') toggleDoor('right');
+    else if(k==='h') toggleLight('left');
+    else if(k==='k') toggleLight('right');
+    else if(k==='j') toggleCamera();
+    else if(k==='n') toggleFan();
+  }
+  if(!isNaN(k)&&+k>=1&&+k<=9){
+    const list=currentTab==='cameras'?CAM_ROOMS_LIST:DUCT_CAM_LIST;
+    const cam=list[+k-1]; if(cam) selectCam(cam.id);
+  }
+});
+
+// ══════════════════════════════════════════════════════════
+// RECORDES
+// ══════════════════════════════════════════════════════════
+function calcGrade(pct,bangs){
+  let gi=pct>60&&bangs<5?0:pct>35?1:pct>15?2:3;
+  return [{g:'S',c:'#0fc',l:'PERFEITO!'},{g:'A',c:'#0f8',l:'ÓTIMO!'},{g:'B',c:'#8f0',l:'BOM'},{g:'C',c:'#fc0',l:'REGULAR'}][gi];
+}
+function saveScore(night,minPower){
+  try{
+    const s=getScores();
+    const entry={
+      night,minPower:Math.ceil(minPower),date:new Date().toLocaleDateString('pt-BR'),
+      bangs:G.stats.bangs,foxyBlocked:G.stats.foxyBlocked,
+      mvFreddy:G.stats.mvFreddy||0,mvBonnie:G.stats.mvBonnie||0,
+      mvChica:G.stats.mvChica||0,mvMangle:G.stats.mvMangle||0,
+      grade:calcGrade(minPower,G.stats.bangs).g,
+      isCustom:!!G._isCustom
+    };
+    s.push(entry);
+    s.sort((a,b)=>b.night-a.night||b.minPower-a.minPower);
+    localStorage.setItem('fnaf_scores',JSON.stringify(s.slice(0,8)));
+  }catch(e){}
+}
+function getScores(){try{return JSON.parse(localStorage.getItem('fnaf_scores'))||[]}catch(e){return[]}}
+function renderScores(){
+  const s=getScores(),ul=document.getElementById('scores-list');
+  ul.innerHTML=s.length?s.map(x=>`<li>
+    <span style="color:#666">${x.grade||'?'} </span>
+    <span>${x.isCustom?'⚙️ ':''}Noite ${x.night} — ${x.minPower}% energia</span>
+    <span style="color:#555;font-size:.7em">${x.date}</span>
+  </li>`).join(''):'<li class="empty">Nenhum recorde ainda</li>';
+}
+
+// ══════════════════════════════════════════════════════════
+// UI — CÂMERAS
+// ══════════════════════════════════════════════════════════
+function buildCamGrid(){
+  const grid=document.getElementById('cam-grid');
+  grid.innerHTML='';
+  const list=currentTab==='cameras'?CAM_ROOMS_LIST:DUCT_CAM_LIST;
+  list.forEach(cam=>{
+    const btn=document.createElement('button');
+    btn.className='cam-btn'; btn.id='camBtn-'+cam.id;
+    btn.textContent=(ROOMS[cam.room]?.label||cam.room).split('—')[0].trim();
+    const dot=document.createElement('span'); dot.className='cdot'; dot.id='dot-'+cam.id;
+    btn.appendChild(dot); btn.onclick=()=>selectCam(cam.id);
+    grid.appendChild(btn);
+  });
+}
+// Mapa de imagens por sala
+const ROOM_IMG={
+  stage:'stage_hq.png', dining:'dining.png', cove:'cove.png',
+  left_hall:'hall.png', right_hall:'hall.png',
+  left_door:'hall.png', right_door:'hall.png',
+  backstage:'backstage.png',
+};
+
+function updateCamFeed(){
+  const allCams=[...CAM_ROOMS_LIST,...DUCT_CAM_LIST];
+  const cam=allCams.find(c=>c.id===G.activeCam); if(!cam) return;
+  const room=ROOMS[cam.room]||{label:cam.room,desc:'',bg:'rb-hall',furn:''};
+  const isStatic=G.camStaticTimer>0&&Math.random()<.4;
+  const isGlitch=G.temperature>75&&Math.random()<.3;
+  const feedBox=document.getElementById('cam-feed-box');
+  feedBox.classList.toggle('cam-glitch',isGlitch&&!isStatic);
+  // Troca imagem via <img src>
+  const imgEl=document.getElementById('cam-img');
+  const imgFile=isStatic?null:ROOM_IMG[cam.room];
+  const scene=document.getElementById('cam-scene');
+  if(imgFile){
+    imgEl.src=imgFile;imgEl.style.display='block';
+    scene.style.background='';
+  } else {
+    imgEl.style.display='none';
+    const isDuct=cam.room.startsWith('duct');
+    scene.style.background=isDuct
+      ?'radial-gradient(ellipse 55% 55% at 50% 50%,#2a2a2a 0%,#161616 45%,#060606 100%),repeating-linear-gradient(0deg,transparent 0,transparent 22px,rgba(60,60,60,.7) 22px,rgba(60,60,60,.7) 25px),repeating-linear-gradient(90deg,transparent 0,transparent 22px,rgba(50,50,50,.5) 22px,rgba(50,50,50,.5) 25px),linear-gradient(180deg,#1a1a1a 0%,#242424 50%,#1a1a1a 100%)'
+      :'linear-gradient(180deg,#060c10 0%,#0a1218 50%,#060c10 100%)';
+  }
+  document.getElementById('cam-id-txt').textContent=cam.id.toUpperCase();
+  // Timestamp
+  const h=Math.min(5,Math.floor(G.time/SECS_PH));
+  const m=Math.floor((G.time%SECS_PH)/SECS_PH*60);
+  document.getElementById('cam-timestamp').textContent=`${['12','01','02','03','04','05'][h]}:${String(m).padStart(2,'0')}`;
+  if(isStatic){
+    document.getElementById('cam-room-name').textContent='📡 SEM SINAL';
+    document.getElementById('cam-room-chars').textContent='';
+    document.getElementById('cam-room-desc').textContent='';
+    return;
+  }
+  document.getElementById('cam-room-name').textContent=room.label;
+  document.getElementById('cam-room-desc').textContent=room.desc;
+  // Characters
+  const charsHere=[];
+  for(const [id,ch] of Object.entries(G.chars)){
+    if(!ch.active||ch.transitioning) continue;
+    if(CHAR_DEF[id].path[ch.posIdx]===cam.room)
+      charsHere.push(`<img src="${CHAR_DEF[id].img}" class="cam-char-img" alt="${CHAR_DEF[id].name}" title="${CHAR_DEF[id].name}">`);
+  }
+  // Foxy in cove
+  if(cam.room==='cove'){
+    const foxyImgs=['','<img src="foxy.png" class="cam-char-img cam-char-peek1" alt="Foxy">',
+      '<img src="foxy.png" class="cam-char-img cam-char-peek2" alt="Foxy">',
+      '<img src="foxy.png" class="cam-char-img cam-char-run" alt="Foxy">'];
+    if(G.foxyStage>0) charsHere.push(foxyImgs[G.foxyStage]);
+  }
+  // Mangle in ducts
+  if(cam.room===DUCT_PATH[G.mangle.posIdx]&&!G.mangle.transitioning&&G.mangle.active)
+    charsHere.push(`<img src="mangle.png" class="cam-char-img" alt="Mangle">`);
+  // Kitchen disabled
+  if(cam.room==='kitchen'){document.getElementById('cam-room-chars').innerHTML='';document.getElementById('cam-room-desc').textContent='⚫ CÂMERA DESATIVADA';return}
+  document.getElementById('cam-room-chars').innerHTML=charsHere.join('');
+}
+function updateMiniMap(){
+  Object.keys(ROOMS).filter(r=>document.getElementById('mm-'+r)).forEach(r=>{
+    document.getElementById('mmc-'+r).textContent='';
+    const mmEl=document.getElementById('mm-'+r);
+    if(mmEl){
+      const camRoom=[...CAM_ROOMS_LIST,...DUCT_CAM_LIST].find(c=>c.id===G.activeCam)?.room;
+      mmEl.classList.toggle('active-cam',r===camRoom);
+      mmEl.classList.remove('has-char');
+      // #32 Heatmap: borda vermelha baseada na frequência de visitas
+      const heat=G.heatmap&&G.heatmap[r]||0;
+      const heatAlpha=Math.min(0.7,heat/30);
+      mmEl.style.boxShadow=heat>3?`inset 0 0 6px rgba(255,${Math.max(0,100-heat*2)},0,${heatAlpha})`:'';
+    }
+  });
+  for(const [id,ch] of Object.entries(G.chars)){
+    if(!ch.active) continue;
+    const r=CHAR_DEF[id].path[ch.posIdx];
+    const el=document.getElementById('mmc-'+r);
+    if(el){el.textContent+=(ch.transitioning?'💨':CHAR_DEF[id].emoji);document.getElementById('mm-'+r)?.classList.add('has-char')}
+  }
+  // Mangle
+  if(G.mangle.active){
+    const mr=DUCT_PATH[G.mangle.posIdx];
+    const mel=document.getElementById('mmc-'+mr);
+    if(mel) mel.textContent+=(G.mangle.transitioning?'💨':'🕷️');
+  }
+  // Camera button dots
+  [...CAM_ROOMS_LIST,...DUCT_CAM_LIST].forEach(cam=>{
+    const dot=document.getElementById('dot-'+cam.id); if(!dot) return;
+    const chHere=Object.entries(G.chars).filter(([i,ch])=>ch.active&&CHAR_DEF[i].path[ch.posIdx]===cam.room);
+    dot.textContent=chHere[0]?CHAR_DEF[chHere[0][0]].emoji:'';
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+// UI — ESCRITÓRIO
+// ══════════════════════════════════════════════════════════
+function resetUI(){
+  ['left','right'].forEach(s=>{
+    document.getElementById('btn-door-'+s).classList.remove('active');
+    document.getElementById('btn-light-'+s).classList.remove('active');
+    document.getElementById('door-lbl-'+s).classList.remove('closed');
+    document.getElementById('door-bar-'+s).classList.remove('closed');
+    document.getElementById('cone-'+s).classList.remove('on');
+    document.getElementById('hall-'+s).classList.remove('lit');
+  });
+  document.getElementById('btn-cam-toggle').classList.remove('active');
+  document.getElementById('camera-overlay').classList.remove('open');
+  document.getElementById('btn-fan').classList.remove('active');
+  document.getElementById('char-left').classList.remove('vis','dim');
+  document.getElementById('char-right').classList.remove('vis','dim');
+  document.getElementById('office-center').className='';
+  document.getElementById('seal-vent-btn').classList.remove('show');
+  document.getElementById('powerup-btn').style.display='none';
+  G.cameraOpen=false; currentTab='cameras';
+  updateHUD();
+}
+function updateHUD(){
+  const pct=Math.ceil(G.power);
+  document.getElementById('power-pct').textContent=pct;
+  document.getElementById('power-bar').style.width=pct+'%';
+  const bar=document.getElementById('power-bar'),lbl=document.getElementById('power-lbl');
+  if(pct<=15){bar.style.background='#f00';lbl.className='hud-lbl critical'}
+  else if(pct<=35){bar.style.background='#f80';lbl.className='hud-lbl low'}
+  else{bar.style.background='#0f0';lbl.className='hud-lbl'}
+  // Temperature
+  const t=Math.ceil(G.temperature);
+  document.getElementById('temp-val').textContent=t;
+  const tp=(t-18)/82*100;
+  document.getElementById('temp-bar').style.width=tp+'%';
+  document.getElementById('temp-bar').style.background=t<60?'#0af':t<80?'#f80':'#f00';
+  document.getElementById('temp-lbl').className='hud-lbl'+(t>80?' critical':t>60?' low':'');
+  // Guard HP — cai com temperatura, sobe no frescor
+  const tempHot=(t>60);
+  const tempCritical=(t>82);
+  if(tempCritical) G.guardHp=Math.max(0,G.guardHp-1.5);
+  else if(tempHot)  G.guardHp=Math.max(0,G.guardHp-0.6);
+  else              G.guardHp=Math.min(100,G.guardHp+0.4);
+  G.guardHp=Math.round(G.guardHp*10)/10;
+  const hp=Math.ceil(G.guardHp);
+  document.getElementById('hp-val').textContent=hp;
+  document.getElementById('hp-bar').style.width=hp+'%';
+  const hpBar=document.getElementById('hp-bar'),hpLbl=document.getElementById('hp-lbl');
+  if(hp<=20){hpBar.style.background='#f00';hpLbl.className='hud-lbl critical';}
+  else if(hp<=50){hpBar.style.background='#f80';hpLbl.className='hud-lbl low';}
+  else{hpBar.style.background='#0f0';hpLbl.className='hud-lbl';}
+  if(G.guardHp<=0){triggerGameOver('guard');return;}
+  // Night
+  document.getElementById('night-num').textContent=G.night;
+  document.getElementById('time-pct').textContent=Math.min(100,Math.floor(G.time/NIGHT_DUR*100))+'%';
+  // #17 Escritório muda por hora (tint CSS)
+  const hr=Math.min(5,Math.floor(G.time/SECS_PH));
+  const tints=['rgba(60,0,80,.06)','rgba(0,0,80,.07)','rgba(0,60,0,.07)','rgba(80,0,0,.08)','rgba(100,40,0,.08)','rgba(60,50,0,.07)'];
+  const ht=document.getElementById('office-hour-tint');
+  if(ht) ht.style.background=tints[hr];
+}
+function updateOffice(){
+  const cL=getCharAtRoom('left_door'),cR=getCharAtRoom('right_door');
+  const elL=document.getElementById('char-left'),elR=document.getElementById('char-right');
+  if(cL){elL.innerHTML=`<img src="${cL.img}" alt="${cL.name}">`;elL.classList.add('vis');elL.classList.toggle('dim',!G.leftLight)}
+  else elL.classList.remove('vis','dim');
+  if(cR){elR.innerHTML=`<img src="${cR.img}" alt="${cR.name}">`;elR.classList.add('vis');elR.classList.toggle('dim',!G.rightLight)}
+  else elR.classList.remove('vis','dim');
+  // #19 Sombra no hall antes da porta
+  const shadowL=charAtPos('left_hall'),shadowR=charAtPos('right_hall');
+  const hlEl=document.getElementById('hall-left'),hrEl=document.getElementById('hall-right');
+  if(hlEl) hlEl.classList.toggle('has-shadow',!!shadowL);
+  if(hrEl) hrEl.classList.toggle('has-shadow',!!shadowR);
+  // #12 Glitch no escritório quando char na porta aberta
+  const oc=document.getElementById('office-center');
+  if(oc){const doorGlitch=(cL&&!G.leftDoor)||(cR&&!G.rightDoor);oc.classList.toggle('door-glitch',doorGlitch)}
+  const hint=document.getElementById('desk-hint');
+  if((cL&&!G.leftDoor)||(cR&&!G.rightDoor)){hint.textContent='⚠️ FECHE A PORTA!';hint.className='warn'}
+  else if(G.sealVentAvailable){hint.textContent='⚠️ SELE O DUTO!';hint.className='warn'}
+  else if(G.temperature>80){hint.textContent='🔥 LIGUE O VENTILADOR!';hint.className='warn'}
+  else{hint.textContent='use as câmeras para vigiar';hint.className=''}
+}
+function updateClock(){
+  // Analog clock — maps 0-360 game seconds to 12AM-6AM (half revolution for hour hand)
+  const totalMins=G.time/NIGHT_DUR*360; // game minutes scaled 0-360
+  const hrAngle=(totalMins/360)*180; // half circle (12 to 6 = 180°)
+  const mnAngle=((G.time%SECS_PH)/SECS_PH)*360;
+  document.getElementById('clock-hr').style.transform=`rotate(${hrAngle}deg)`;
+  document.getElementById('clock-mn').style.transform=`rotate(${mnAngle}deg)`;
+}
+
+// ══════════════════════════════════════════════════════════
+// BABY / NIGHTMARE MODES
+// ══════════════════════════════════════════════════════════
+let BABY_MODE=false, NIGHTMARE_MODE=false;
+function toggleBaby(on){BABY_MODE=on}
+function toggleNightmare(on){NIGHTMARE_MODE=on}
+
+// ══════════════════════════════════════════════════════════
+// VHS + COLORBLIND TOGGLES
+// ══════════════════════════════════════════════════════════
+let vhsOn=false, cbOn=false;
+function toggleVHS(){
+  vhsOn=!vhsOn;
+  document.getElementById('vhs-overlay').classList.toggle('on',vhsOn);
+  try{localStorage.setItem('fnaf_vhs',vhsOn?'1':'')}catch(e){}
+}
+function toggleColorblind(){
+  cbOn=!cbOn;
+  document.body.classList.toggle('colorblind',cbOn);
+  try{localStorage.setItem('fnaf_cb',cbOn?'1':'')}catch(e){}
+}
+
+// ══════════════════════════════════════════════════════════
+// CURTAIN (screen transition)
+// ══════════════════════════════════════════════════════════
+function showWithCurtain(screenId, delay=0){
+  const c=document.getElementById('curtain');
+  c.style.opacity='1'; c.style.display='block'; c.classList.remove('fade-out');
+  setTimeout(()=>{
+    showScreen(screenId);
+    c.classList.add('fade-out');
+    setTimeout(()=>{c.style.display='none'},900);
+  },delay||100);
+}
+
+// ══════════════════════════════════════════════════════════
+// ACHIEVEMENT SYSTEM
+// ══════════════════════════════════════════════════════════
+const ACHIEVEMENTS={
+  first_night:   {name:'Primeira Noite!',       ico:'🌙', desc:'Sobreviva à Noite 1'},
+  all_5nights:   {name:'Lendário',              ico:'🏆', desc:'Sobreviva às 5 noites'},
+  no_doors:      {name:'Pacifista',             ico:'🕊️', desc:'Noite 1 sem fechar portas'},
+  foxy_blocked3: {name:'Anti-Pirata',           ico:'⚓', desc:'Bloqueie Foxy 3x numa noite'},
+  min_power_10:  {name:'No Limite',             ico:'⚡', desc:'Sobreviva com menos de 10% de energia'},
+  temp_90:       {name:'Sauna',                 ico:'🔥', desc:'Temperatura acima de 90°C na vitória'},
+  night6:        {name:'Noite 6',               ico:'💀', desc:'Sobreviva à Noite 6'},
+  custom_win:    {name:'Mestre do Caos',        ico:'⚙️', desc:'Vença uma Noite Customizada'},
+  minigame_win:  {name:'Pizza Master',          ico:'🍕', desc:'Pontue 500+ no mini-jogo'},
+};
+function getAchievements(){try{return JSON.parse(localStorage.getItem('fnaf_ach'))||{}}catch(e){return{}}}
+function unlockAchievement(id){
+  const a=getAchievements(); if(a[id]) return;
+  a[id]=Date.now();
+  try{localStorage.setItem('fnaf_ach',JSON.stringify(a))}catch(e){}
+  showAchievementToast(ACHIEVEMENTS[id]);
+}
+function showAchievementToast(ach){
+  if(!ach) return;
+  const popup=document.getElementById('achievement-popup');
+  const toast=document.createElement('div'); toast.className='ach-toast';
+  toast.innerHTML=`<span class="ach-ico">${ach.ico}</span><span class="ach-title">CONQUISTA DESBLOQUEADA!</span><span class="ach-name">${ach.name}</span>`;
+  popup.appendChild(toast);
+  setTimeout(()=>toast.remove(),4200);
+}
+function checkNightAchievements(){
+  const a=getAchievements();
+  if(G.night===1&&!a.first_night) unlockAchievement('first_night');
+  if(G.night>=5&&!a.all_5nights) unlockAchievement('all_5nights');
+  if(G.night===1&&G.stats.doors===0&&!a.no_doors) unlockAchievement('no_doors');
+  if(G.stats.foxyBlocked>=3&&!a.foxy_blocked3) unlockAchievement('foxy_blocked3');
+  if(G.stats.minPower<10&&!a.min_power_10) unlockAchievement('min_power_10');
+  if(G.stats.maxTemp>=90&&!a.temp_90) unlockAchievement('temp_90');
+  if(G.night>=6&&!a.night6) unlockAchievement('night6');
+}
+
+// ══════════════════════════════════════════════════════════
+// TUTORIAL SYSTEM
+// ══════════════════════════════════════════════════════════
+const TUT_STEPS=[
+  {title:'Bem-vindo!', text:'Você é o segurança noturno da Fabby\'s Pizzaria. Sobreviva até às 6AM por 5 noites!'},
+  {title:'Câmeras 📷', text:'Use as câmeras para monitorar os personagens. Pressione C ou o botão "Câmeras". Números 1-7 selecionam câmeras.'},
+  {title:'Portas 🚪', text:'Quando um personagem chega na porta, feche-a! Pressione Q (esquerda) ou E (direita). Portas consomem energia.'},
+  {title:'Luzes 💡', text:'Ilumine o corredor com A (esquerda) ou D (direita) para ver se há alguém lá. Também gasta energia.'},
+  {title:'Energia ⚡', text:'Tudo gasta energia. Se acabar, as portas abrem e você perde! Gerencie com sabedoria.'},
+  {title:'Temperatura 🌡️', text:'O servidor aquece com o tempo. Ligue o ventilador (F) para resfriá-lo, mas isso também gasta energia!'},
+  {title:'Foxy 🦊', text:'Foxy fica no Covil. Se você não olhar para ele com frequência, ele corre pelo corredor esquerdo!'},
+  {title:'Dutos 🕳️', text:'Mangue usa os dutos de ventilação. Monitore na aba DUTOS e sele com S quando ele estiver no final!'},
+  {title:'Boa sorte!', text:'Você está pronto! Lembre-se: gerencie energia, monitore câmeras, e feche portas na hora certa. Boa sorte!'},
+];
+let tutStep=0;
+function showTutorial(){tutStep=0;renderTutStep();document.getElementById('tutorial-overlay').classList.add('show')}
+function closeTutorial(){document.getElementById('tutorial-overlay').classList.remove('show')}
+function tutNext(){if(tutStep<TUT_STEPS.length-1){tutStep++;renderTutStep()}else closeTutorial()}
+function tutPrev(){if(tutStep>0){tutStep--;renderTutStep()}}
+function renderTutStep(){
+  const s=TUT_STEPS[tutStep];
+  document.getElementById('tut-progress').textContent=`${tutStep+1} / ${TUT_STEPS.length}`;
+  document.getElementById('tut-steps').innerHTML=`<h2>${s.title}</h2><p>${s.text}</p>`;
+}
+
+// ══════════════════════════════════════════════════════════
+// GALLERY
+// ══════════════════════════════════════════════════════════
+const CHAR_BIOS={
+  freddy:{name:'Freddy Fofofo',img:'freddy.png',bio:'O animatrônico líder. Fica no palco até as coisas ficarem sérias. Ataca pela esquerda.',stats:'Aparece: Noite 2+ | Velocidade: Cresce a cada noite'},
+  bonnie:{name:'Bonnie Coelho',img:'bonnie.png',bio:'O mais ativo nas noites iniciais. Anda pela direita e chega primeiro na maioria das vezes.',stats:'Aparece: Noite 1 | Velocidade: Alta'},
+  chica: {name:'Chica Garotinha',img:'chica.png',bio:'Fanática por pizza. Só acorda na Noite 3, mas é persistente quando começa.',stats:'Aparece: Noite 3 | Velocidade: Média'},
+  foxy:  {name:'Foxy Pirata',img:'foxy.png',bio:'Espreita no Covil do Foxy. Se você não o vigiar, ele corre pelo corredor esquerdo!',stats:'Aparece: Noite 2 | Tática: Monitorar câmera 1C ajuda'},
+  mangle:{name:'Mangue',img:'mangle.png',bio:'A aranha dos dutos. Rastreia pelo sistema de ventilação e ataca pelo teto.',stats:'Aparece: Noite 2 | Rota: Dutos de ventilação'},
+};
+// ══════════════════════════════════════════════════════════
+// SCORE SHARING
+// ══════════════════════════════════════════════════════════
+function shareScore(){
+  const scored=getScores();
+  const best=scored[0];
+  if(!best){alert('Nenhum recorde ainda!');return}
+  const txt=`🐻 5 Noites na Fabby's\nMelhor: Noite ${best.night} | ${best.minPower}% energia mínima\nJogue em: ${location.href}`;
+  if(navigator.share){navigator.share({title:'5 Noites na Fabby\'s',text:txt}).catch(()=>{})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>alert('Resultado copiado!')).catch(()=>prompt('Copie seu resultado:',txt))}
+  else prompt('Copie seu resultado:',txt);
+}
+
+function showGallery(){
+  const ach=getAchievements();
+  const scored=getScores();
+  const maxNight=scored.length?Math.max(...scored.map(s=>s.night)):0;
+  const grid=document.getElementById('gallery-grid'); grid.innerHTML='';
+  Object.entries(CHAR_BIOS).forEach(([id,c],i)=>{
+    const unlocked=(i===0)||(id==='bonnie')||(id==='chica'&&maxNight>=3)||(id==='foxy'&&maxNight>=2)||(id==='mangle'&&maxNight>=2);
+    const card=document.createElement('div'); card.className='gallery-card'+(unlocked?'':' locked');
+    card.innerHTML=`
+      <div class="gc-lock">${unlocked?'':'🔒'}</div>
+      <img src="${c.img}" alt="${c.name}" style="${unlocked?'':'filter:brightness(0)'}">
+      <div class="gc-name">${c.name}</div>
+      ${unlocked?`<div class="gc-bio">${c.bio}</div><div class="gc-stats">${c.stats}</div>`:'<div class="gc-bio">Complete mais noites para desbloquear</div>'}
+    `;
+    grid.appendChild(card);
+  });
+  showScreen('screen-gallery');
+}
+
+// ══════════════════════════════════════════════════════════
+// DIARY
+// ══════════════════════════════════════════════════════════
+const DIARY_TEXTS=[
+  {night:1,text:'Primeira noite no trabalho. O gerente me disse que os animatrônicos "se movem" à noite. Achei que era brincadeira... não era.'},
+  {night:2,text:'Não dormi hoje. Eles estão mais ativos. Tenho certeza que o Bonnie me olhou pela câmera. Diretamente. Por um segundo inteiro.'},
+  {night:3,text:'A Chica começou a se mover. Ela vai até a cozinha — mas a câmera lá não funciona. Só ouço sons metálicos. Não quero saber o que é.'},
+  {night:4,text:'Foxy correu. Cheguei a fechar a porta a tempo, mas ouvi as batidas. Ele não vai desistir fácil. O Freddy está começando a me olhar nos olhos.'},
+  {night:5,text:'Última noite. Se eu sobreviver, prometo nunca trabalhar em pizzaria de novo. A energia está crítica toda hora e eles sabem. Eles SABEM.'},
+  {night:6,text:'Por que voltei?! Modo pesadelo. Tudo mais rápido. A sensação de que eles aprenderam com minhas estratégias. Mas eu sou mais esperto... espero.'},
+];
+function showDiary(){
+  const scored=getScores();
+  const completedNights=new Set(scored.map(s=>s.night));
+  const entries=document.getElementById('diary-entries'); entries.innerHTML='';
+  DIARY_TEXTS.forEach(d=>{
+    const unlocked=completedNights.has(d.night)||(d.night<=1);
+    const div=document.createElement('div'); div.className='diary-entry'+(unlocked?'':' locked');
+    div.innerHTML=`<div class="de-night">NOITE ${d.night}</div><div class="de-text">${unlocked?d.text:'[Página ilegível — complete a noite para ler]'}</div>`;
+    entries.appendChild(div);
+  });
+  showScreen('screen-diary');
+}
+
+// ══════════════════════════════════════════════════════════
+// CUSTOM NIGHT
+// ══════════════════════════════════════════════════════════
+let CN_SETTINGS={freddy:10,bonnie:10,chica:10,foxy:10,mangle:10};
+function showCustomNight(){
+  const grid=document.getElementById('cn-grid'); grid.innerHTML='';
+  Object.entries(CHAR_BIOS).forEach(([id,c])=>{
+    const div=document.createElement('div'); div.className='cn-char';
+    div.innerHTML=`
+      <img src="${c.img}" alt="${c.name}">
+      <div class="gc-name" style="color:#888;margin-bottom:4px">${c.name}</div>
+      <label>${'AI:'}</label>
+      <input type="range" min="0" max="20" value="${CN_SETTINGS[id]}" oninput="CN_SETTINGS['${id}']=+this.value;this.nextElementSibling.textContent=this.value">
+      <span class="cn-val">${CN_SETTINGS[id]}</span>
+    `;
+    grid.appendChild(div);
+  });
+  showScreen('screen-customnight');
+}
+function startCustomNight(){
+  // Map 0-20 AI levels to speed values (20=fastest=speed 8, 0=inactive=999)
+  const levelToSpeed=lv=>lv===0?9999:Math.max(8,Math.round(100-(lv*4.5)));
+  stopGame();
+  const night=6; // Custom night = night 6 internally
+  document.getElementById('ni-title').textContent='⚙️ Noite Customizada';
+  document.getElementById('ni-tip').textContent='Você mesmo escolheu sua dificuldade. Boa sorte!';
+  showScreen('screen-nightintro');
+  setTimeout(()=>{
+    initState(night);
+    // Override speeds with custom settings
+    G.chars.freddy.speed=levelToSpeed(CN_SETTINGS.freddy);
+    G.chars.bonnie.speed=levelToSpeed(CN_SETTINGS.bonnie);
+    G.chars.chica.active=CN_SETTINGS.chica>0; G.chars.chica.speed=levelToSpeed(CN_SETTINGS.chica);
+    G.foxySpeed=levelToSpeed(CN_SETTINGS.foxy);
+    G.mangle.active=CN_SETTINGS.mangle>0; G.mangle.speed=levelToSpeed(CN_SETTINGS.mangle);
+    G._isCustom=true;
+    buildCamGrid(); resetUI();
+    showScreen('screen-game');
+    try{SFX.startAmbient(5)}catch(e){}
+    updateHeartbeat();
+    G.interval=setInterval(gameTick,1000);
+  },2800);
+}
+
+// ══════════════════════════════════════════════════════════
+// NIGHT 6 (unlocked after Night 5)
+// ══════════════════════════════════════════════════════════
+// Night 6 uses nightmare difficulty — all chars at max speed
+const MOVE_SPEED_N6={freddy:8,bonnie:8,chica:8,foxy:12,mangle:10};
+
+// ══════════════════════════════════════════════════════════
+// MINI-GAME: Pizza Rush!
+// ══════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════
+// MINI-JOGOS — Pizza Rush + Meteor Storm
+// ══════════════════════════════════════════════════════════
+let MG_ACTIVE=null; // 'pizza' | 'meteor'
+const CW=420,CH=280; // canvas dimensions
+
+function showMinigame(){
+  showScreen('screen-minigame');
+  document.getElementById('mg-selector').style.display='flex';
+  document.getElementById('mg-selector').style.flexDirection='column';
+  document.getElementById('mg-selector').style.alignItems='center';
+  document.getElementById('mg-arena').style.display='none';
+}
+function selectMG(type){
+  MG_ACTIVE=type;
+  document.getElementById('mg-selector').style.display='none';
+  const arena=document.getElementById('mg-arena');
+  arena.style.display='flex';
+  document.getElementById('mg-title').textContent=type==='pizza'?'🍕 Pizza Rush':'☄️ Meteor Storm';
+  document.getElementById('mg-result').textContent='Pressione ▶ Jogar para começar!';
+  document.getElementById('mg-score').textContent='0';
+  document.getElementById('mg-lives').textContent='3';
+  document.getElementById('mg-time').textContent='30';
+  // Draw idle screen
+  const cv=document.getElementById('mg-canvas');
+  cv.width=CW; cv.height=CH;
+  const ctx=cv.getContext('2d');
+  ctx.fillStyle='#001a00'; ctx.fillRect(0,0,CW,CH);
+  ctx.fillStyle='#040'; ctx.font='48px serif'; ctx.textAlign='center';
+  ctx.fillText(type==='pizza'?'🍕':'☄️',CW/2,CH/2+16);
+  ctx.fillStyle='#060'; ctx.font='14px monospace';
+  ctx.fillText('Pressione Jogar',CW/2,CH/2+50);
+}
+function startActiveMG(){ if(MG_ACTIVE==='pizza') startPizzaMG(); else startMeteorMG(); }
+function backToMGSelector(){ stopActiveMG(); showMinigame(); }
+
+// ── SHARED STOP ─────────────────────────────────────────
+let _MG={running:false,interval:null,animFrame:null,_onKey:null,_keys:{}};
+function stopActiveMG(){
+  _MG.running=false;
+  clearInterval(_MG.interval);
+  cancelAnimationFrame(_MG.animFrame);
+  if(_MG._onKey){document.removeEventListener('keydown',_MG._onKey);document.removeEventListener('keyup',_MG._onKeyUp||null);}
+}
+
+// ── SFX helpers ──────────────────────────────────────────
+function mgBeep(freq,dur,vol=0.15,type='sine'){try{const c=new(window.AudioContext||window.webkitAudioContext)(),T=c.currentTime,o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,T);g.gain.exponentialRampToValueAtTime(0.001,T+dur);o.start(T);o.stop(T+dur+0.05);}catch(e){}}
+function mgNoise(dur,vol=0.1){try{const c=new(window.AudioContext||window.webkitAudioContext)(),n=Math.ceil(c.sampleRate*dur),buf=c.createBuffer(1,n,c.sampleRate),da=buf.getChannelData(0);for(let i=0;i<n;i++)da[i]=Math.random()*2-1;const s=c.createBufferSource(),g=c.createGain();s.buffer=buf;s.connect(g);g.connect(c.destination);g.gain.setValueAtTime(vol,c.currentTime);g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);s.start();}catch(e){}}
+function mgEndSound(win){if(win){[523,659,784,880,1047].forEach((f,i)=>setTimeout(()=>mgBeep(f,.25,.2,'sine'),i*120));}else{mgBeep(220,.3,.2,'sawtooth');setTimeout(()=>mgBeep(110,.5,.2,'sawtooth'),200);}}
+
+function _mgEnd(score,lives){
+  stopActiveMG();
+  const result=document.getElementById('mg-result');
+  if(score>=500){result.textContent=`🏆 INCRÍVEL! ${score} pts! +20% energia!`;G_BONUS_POWER=20;unlockAchievement('minigame_win');mgEndSound(true);}
+  else if(score>=200){result.textContent=`👍 Bom! ${score} pts! +10% energia!`;G_BONUS_POWER=10;mgEndSound(true);}
+  else if(lives<=0){result.textContent=`💀 Game Over! ${score} pts. Sem bônus.`;mgEndSound(false);}
+  else{result.textContent=`⏰ Tempo! ${score} pts. Sem bônus.`;mgEndSound(false);}
+}
+
+// ══════════════════════════════════════════════════════════
+// PIZZA RUSH
+// ══════════════════════════════════════════════════════════
+function startPizzaMG(){
+  stopActiveMG();
+  const state={score:0,lives:3,timeLeft:35,items:[],spawnTick:0,
+    player:{x:CW/2-16,y:CH-36,w:36,h:26},speedMult:1};
+  _MG.running=true;
+  document.getElementById('mg-result').textContent='';
+
+  // Tick: 1s timer + spawning
+  _MG.interval=setInterval(()=>{
+    if(!_MG.running) return;
+    state.timeLeft--;
+    document.getElementById('mg-time').textContent=state.timeLeft;
+    // Progressive speed + spawn rate
+    state.speedMult=1+((35-state.timeLeft)/35)*1.2;
+    state.spawnTick++;
+    const spawnRate=Math.max(1,3-Math.floor((35-state.timeLeft)/12)); // 3→1 spawns/tick
+    if(state.spawnTick%spawnRate===0){
+      const bad=Math.random()<0.22+(35-state.timeLeft)*0.004;
+      state.items.push({x:Math.random()*(CW-40)+20,y:-10,
+        vy:(0.7+Math.random()*0.6)*state.speedMult,
+        emoji:bad?'💀':'🍕',bad});
+    }
+    if(state.timeLeft<=0) _mgEnd(state.score,state.lives);
+  },1000);
+
+  const cv=document.getElementById('mg-canvas'); cv.width=CW; cv.height=CH;
+  const ctx=cv.getContext('2d');
+
+  // Controls
+  _MG._keys={};
+  _MG._onKey =e=>{_MG._keys[e.key]=true; e.preventDefault&&['ArrowLeft','ArrowRight','a','d'].includes(e.key)&&e.preventDefault();};
+  _MG._onKeyUp=e=>{_MG._keys[e.key]=false};
+  document.addEventListener('keydown',_MG._onKey);
+  document.addEventListener('keyup',_MG._onKeyUp);
+  cv.onmousemove=e=>{const r=cv.getBoundingClientRect();const scale=CW/r.width;state.player.x=Math.min(CW-state.player.w,(e.clientX-r.left)*scale-state.player.w/2);};
+  cv.onclick=e=>{const r=cv.getBoundingClientRect();const scale=CW/r.width;state.player.x=Math.min(CW-state.player.w,Math.max(0,(e.clientX-r.left)*scale-state.player.w/2));};
+
+  let lastT=0;
+  function draw(ts){
+    if(!_MG.running) return;
+    const dt=Math.min((ts-lastT)/16.67,3); lastT=ts; // delta, capped
+
+    // Keyboard move
+    const spd=5*dt;
+    if(_MG._keys['ArrowLeft']||_MG._keys['a']) state.player.x=Math.max(0,state.player.x-spd);
+    if(_MG._keys['ArrowRight']||_MG._keys['d']) state.player.x=Math.min(CW-state.player.w,state.player.x+spd);
+
+    // BG
+    ctx.fillStyle='#001a00'; ctx.fillRect(0,0,CW,CH);
+    // Floor
+    ctx.fillStyle='#002800'; ctx.fillRect(0,CH-10,CW,10);
+    // Grid
+    ctx.strokeStyle='rgba(0,40,0,.4)'; ctx.lineWidth=1;
+    for(let x=0;x<CW;x+=42){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,CH);ctx.stroke();}
+
+    // Items
+    const px=state.player.x,py=state.player.y,pw=state.player.w,ph=state.player.h;
+    for(let i=state.items.length-1;i>=0;i--){
+      const it=state.items[i];
+      it.y+=it.vy*dt;
+      ctx.font='22px serif'; ctx.textAlign='center';
+      ctx.fillText(it.emoji,it.x,it.y);
+      // Catch
+      if(it.y+10>py&&it.y-10<py+ph&&it.x>px-12&&it.x<px+pw+12){
+        state.items.splice(i,1);
+        if(it.bad){
+          state.lives--;document.getElementById('mg-lives').textContent=state.lives;
+          mgBeep(150,.15,.25,'sawtooth');mgNoise(.08,.12);
+          if(state.lives<=0){_mgEnd(state.score,state.lives);return;}
+        } else {
+          state.score+=10;document.getElementById('mg-score').textContent=state.score;
+          mgBeep(880,.07,.12,'sine');
+        }
+      } else if(it.y>CH+10){
+        state.items.splice(i,1);
+        if(!it.bad){
+          state.lives--;document.getElementById('mg-lives').textContent=state.lives;
+          mgBeep(220,.12,.15,'sawtooth');
+          if(state.lives<=0){_mgEnd(state.score,state.lives);return;}
+        }
+      }
+    }
+
+    // Player (guard silhouette)
+    ctx.font='30px serif'; ctx.textAlign='center';
+    ctx.fillText('🧑',px+pw/2,py+ph);
+
+    // HUD overlay
+    ctx.fillStyle='rgba(0,30,0,.7)'; ctx.fillRect(0,0,CW,22);
+    ctx.fillStyle='#0c0'; ctx.font='12px monospace'; ctx.textAlign='left';
+    ctx.fillText(`Pts: ${state.score}   ❤ ${state.lives}   ⏰ ${state.timeLeft}s`,6,15);
+
+    _MG.animFrame=requestAnimationFrame(draw);
+  }
+  _MG.animFrame=requestAnimationFrame(draw);
+}
+
+// ══════════════════════════════════════════════════════════
+// METEOR STORM
+// ══════════════════════════════════════════════════════════
+function startMeteorMG(){
+  stopActiveMG();
+  const state={score:0,lives:3,timeLeft:40,meteors:[],bullets:[],
+    player:{x:CW/2-16,y:CH-40,w:32},spawnTick:0,fireCD:0,speedMult:1,
+    explosions:[]};
+  _MG.running=true;
+  document.getElementById('mg-result').textContent='';
+
+  _MG.interval=setInterval(()=>{
+    if(!_MG.running) return;
+    state.timeLeft--;
+    document.getElementById('mg-time').textContent=state.timeLeft;
+    state.speedMult=1+((40-state.timeLeft)/40)*1.5;
+    // Spawn meteors
+    const rate=Math.max(1,Math.floor(1+(40-state.timeLeft)/10));
+    for(let r=0;r<rate;r++){
+      if(Math.random()<0.6+state.speedMult*0.1){
+        const big=Math.random()<0.2;
+        state.meteors.push({x:Math.random()*(CW-30)+15,y:-20,
+          vy:(0.5+Math.random()*0.8)*state.speedMult,
+          vx:(Math.random()-.5)*0.6,
+          r:big?18:10,pts:big?30:10,big,
+          color:`hsl(${Math.random()*30},80%,${40+Math.random()*20}%)`});
+      }
+    }
+    if(state.timeLeft<=0) _mgEnd(state.score,state.lives);
+  },1000);
+
+  const cv=document.getElementById('mg-canvas'); cv.width=CW; cv.height=CH;
+  const ctx=cv.getContext('2d');
+  // Stars background
+  const stars=Array.from({length:60},()=>({x:Math.random()*CW,y:Math.random()*CH,s:Math.random()*1.5+.3}));
+
+  _MG._keys={};
+  _MG._onKey=e=>{
+    _MG._keys[e.key]=true;
+    if([' ','ArrowLeft','ArrowRight','a','d'].includes(e.key)) e.preventDefault&&e.preventDefault();
+  };
+  _MG._onKeyUp=e=>{_MG._keys[e.key]=false};
+  document.addEventListener('keydown',_MG._onKey);
+  document.addEventListener('keyup',_MG._onKeyUp);
+  cv.onmousemove=e=>{const r=cv.getBoundingClientRect();const scale=CW/r.width;state.player.x=Math.min(CW-state.player.w,Math.max(0,(e.clientX-r.left)*scale-state.player.w/2));};
+  cv.onclick=e=>{fire(state);};
+
+  function fire(state){
+    if(state.fireCD>0||!_MG.running) return;
+    state.fireCD=8;
+    state.bullets.push({x:state.player.x+state.player.w/2,y:state.player.y,vy:-10,w:3,h:12});
+    mgBeep(1200,.06,.1,'square');
+  }
+
+  let lastT=0,frameN=0;
+  function draw(ts){
+    if(!_MG.running) return;
+    const dt=Math.min((ts-lastT)/16.67,3); lastT=ts; frameN++;
+    if(state.fireCD>0) state.fireCD-=dt;
+    // Auto-fire on space hold
+    if((_MG._keys[' ']||_MG._keys['x'])&&state.fireCD<=0) fire(state);
+
+    // Keyboard move
+    const spd=5*dt;
+    if(_MG._keys['ArrowLeft']||_MG._keys['a']) state.player.x=Math.max(0,state.player.x-spd);
+    if(_MG._keys['ArrowRight']||_MG._keys['d']) state.player.x=Math.min(CW-state.player.w,state.player.x+spd);
+
+    // BG — space
+    ctx.fillStyle='#000308'; ctx.fillRect(0,0,CW,CH);
+    stars.forEach(s=>{ctx.fillStyle=`rgba(255,255,255,${.3+Math.sin(frameN*.02+s.x)*.2})`;ctx.beginPath();ctx.arc(s.x,s.y,s.s,0,Math.PI*2);ctx.fill();});
+
+    // Ground (pizzaria roof)
+    ctx.fillStyle='#3a1800'; ctx.fillRect(0,CH-14,CW,14);
+    ctx.fillStyle='#ff6600'; ctx.font='11px monospace'; ctx.textAlign='center';
+    ctx.fillText('🏠 FABBY\'S PIZZARIA',CW/2,CH-3);
+
+    // Bullets
+    for(let i=state.bullets.length-1;i>=0;i--){
+      const b=state.bullets[i];
+      b.y+=b.vy*dt;
+      if(b.y<-20){state.bullets.splice(i,1);continue;}
+      ctx.fillStyle='#ff0'; ctx.shadowColor='#ff0'; ctx.shadowBlur=6;
+      ctx.fillRect(b.x-b.w/2,b.y,b.w,b.h);
+      ctx.shadowBlur=0;
+    }
+
+    // Meteors
+    for(let i=state.meteors.length-1;i>=0;i--){
+      const m=state.meteors[i];
+      m.y+=m.vy*dt; m.x+=m.vx*dt;
+
+      // Bullet collision
+      let hit=false;
+      for(let j=state.bullets.length-1;j>=0;j--){
+        const b=state.bullets[j];
+        const dx=b.x-m.x,dy=b.y-m.y;
+        if(Math.sqrt(dx*dx+dy*dy)<m.r+4){
+          state.bullets.splice(j,1);
+          hit=true; break;
+        }
+      }
+      if(hit){
+        state.score+=m.pts;
+        document.getElementById('mg-score').textContent=state.score;
+        state.explosions.push({x:m.x,y:m.y,r:m.r,age:0,max:12});
+        state.meteors.splice(i,1);
+        mgBeep(300,.08,.2,'sawtooth');mgNoise(.05,.1);
+        continue;
+      }
+
+      // Hit ground
+      if(m.y+m.r>CH-14){
+        state.meteors.splice(i,1);
+        state.lives--;
+        document.getElementById('mg-lives').textContent=state.lives;
+        state.explosions.push({x:m.x,y:CH-14,r:m.r*1.5,age:0,max:20,ground:true});
+        mgNoise(.15,.3);mgBeep(80,.2,.3,'sawtooth');
+        if(state.lives<=0){_mgEnd(state.score,state.lives);return;}
+        continue;
+      }
+
+      // Draw meteor
+      ctx.save();
+      ctx.translate(m.x,m.y);
+      const grad=ctx.createRadialGradient(0,0,0,0,0,m.r);
+      grad.addColorStop(0,'#fff');grad.addColorStop(.3,m.color);grad.addColorStop(1,'rgba(80,40,0,0)');
+      ctx.fillStyle=grad;
+      ctx.beginPath();ctx.arc(0,0,m.r,0,Math.PI*2);ctx.fill();
+      // Tail
+      ctx.strokeStyle=`rgba(255,${m.big?100:60},0,.4)`;ctx.lineWidth=m.r*.6;
+      ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-m.vx*4,-m.vy*5);ctx.stroke();
+      ctx.restore();
+    }
+
+    // Explosions
+    for(let i=state.explosions.length-1;i>=0;i--){
+      const ex=state.explosions[i];
+      ex.age+=dt;
+      const prog=ex.age/ex.max;
+      if(prog>=1){state.explosions.splice(i,1);continue;}
+      const alpha=1-prog;
+      ctx.save();
+      ctx.globalAlpha=alpha;
+      const eg=ctx.createRadialGradient(ex.x,ex.y,0,ex.x,ex.y,ex.r*(1+prog*2));
+      eg.addColorStop(0,'#fff');eg.addColorStop(.4,'#f80');eg.addColorStop(1,'rgba(255,40,0,0)');
+      ctx.fillStyle=eg;
+      ctx.beginPath();ctx.arc(ex.x,ex.y,ex.r*(1+prog*2),0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.restore();
+    }
+
+    // Player ship (guard with cannon)
+    const px=state.player.x,pw=state.player.w;
+    ctx.font='28px serif'; ctx.textAlign='center'; ctx.shadowBlur=0;
+    ctx.fillText('🚀',px+pw/2,state.player.y+pw);
+
+    // HUD
+    ctx.fillStyle='rgba(0,0,20,.8)'; ctx.fillRect(0,0,CW,22);
+    ctx.fillStyle='#0cf'; ctx.font='12px monospace'; ctx.textAlign='left';
+    ctx.fillText(`Pts: ${state.score}   ❤ ${state.lives}   ⏰ ${state.timeLeft}s   [Espaço/Click = Atirar]`,6,15);
+
+    _MG.animFrame=requestAnimationFrame(draw);
+  }
+  _MG.animFrame=requestAnimationFrame(draw);
+}
+// Backward compat alias
+function startMinigame(){startActiveMG();}
+let G_BONUS_POWER=0;
+
+// ══════════════════════════════════════════════════════════
+// STORY SYSTEM — Narrativa guiada entre noites
+// ══════════════════════════════════════════════════════════
+const STORY_SCENES={
+  // night = após qual noite este story aparece
+  1:{
+    portrait:'📋',speaker:'GERENTE (ligação)',
+    text:'Olá, novo segurança! Bem-vindo à Fabby\'s Pizzaria. Só preciso que fique de olho nas câmeras e... ah, ignore os animatrônicos à noite. Eles só andam por aí para "economizar energia". Haha. Boa sorte!',
+    choices:[
+      {text:'👍 "Entendido, chefe. Sem problemas."',effect:'none',
+       result:'Você confia no gerente. Seu turno começa tranquilo.',tag:'good'},
+      {text:'🤔 "Espera... eles ANDAM? De verdade?"',effect:'power+10',
+       result:'Você exige mais informações. O gerente manda um manual extra: +10% energia!',tag:'good'},
+      {text:'😴 "Tá, vai... como eu desligo essa câmera?"',effect:'speed+10',
+       result:'Você nem presta atenção. Os personagens notam seu descuido... (+10% velocidade)',tag:'bad'},
+    ]
+  },
+  2:{
+    portrait:'📝',speaker:'NOTA NO BANHEIRO',
+    text:'"Se você está lendo isso, o segurança anterior sobreviveu. Dica: NUNCA deixe o Freddy sem câmera por mais de 30 segundos. Ele... aprende. Também: o ventilador é seu melhor amigo. Assine: Mike S."',
+    choices:[
+      {text:'🎥 "Vou manter olho fixo no Freddy."',effect:'freddySlow',
+       result:'Freddy se sente observado e fica um pouco mais lento esta noite.',tag:'good'},
+      {text:'❄️ "Deixar o ventilador ligado o tempo todo."',effect:'powerSave',
+       result:'Ventilador pré-ligado! Temperatura começa em 15°C mas consome mais energia.',tag:'neutral'},
+      {text:'🗑️ "Que nota idiota." (jogar fora)',effect:'speed+15',
+       result:'Má ideia. Você ignora dicas valiosas. Personagens +15% mais rápidos.',tag:'bad'},
+    ]
+  },
+  3:{
+    portrait:'📞',speaker:'LIGAÇÃO ANÔNIMA',
+    text:'"Ei. Não fique em pânico, mas... Chica está te ouvindo. Ela escuta o ventilador. E Foxy? Já está olhando pra câmera da Enseada. Se você vir ele parado... feche a câmera AGORA. Confie em mim."',
+    choices:[
+      {text:'🚪 "Vou priorizar as portas esta noite."',effect:'doorBonus',
+       result:'As portas ficam mais "pesadas" — personagens têm 15% menos chance de entrar!',tag:'good'},
+      {text:'⚡ "Vou guardar energia para emergências."',effect:'power+15',
+       result:'Você começa a noite com +15% de energia. Prevenção é tudo!',tag:'good'},
+      {text:'🦊 "Foxy? Esse é o laranja rasgado né?"',effect:'foxyFast',
+       result:'Você subestima Foxy. Ele vem mais rápido que o normal esta noite.',tag:'bad'},
+    ]
+  },
+  4:{
+    portrait:'🗂️',speaker:'RELATÓRIO INTERNO',
+    text:'"CONFIDENCIAL — Os animatrônicos apresentam comportamento anômalo acima de 80°C. Teste 4: sujeito resistiu 4 noites. Seu arquivo foi destruído. Não chegue ao escritório do gerente. Repito: NÃO."',
+    choices:[
+      {text:'🧊 "Vou manter temperatura baixa a todo custo."',effect:'tempResist',
+       result:'Você foca no resfriamento. HP do segurança começa em 100 e cai 30% mais devagar!',tag:'good'},
+      {text:'🔍 "Vou investigar o escritório do gerente."',effect:'power+20',
+       result:'Você encontra um gerador escondido! +20% energia inicial.',tag:'neutral'},
+      {text:'😤 "Não tenho medo de animatrônico nenhum."',effect:'allFast',
+       result:'Bravura ou burrice? Todos os personagens ficam 20% mais rápidos.',tag:'bad'},
+    ]
+  },
+  5:{
+    portrait:'🌑',speaker:'VOZ NO ESCURO',
+    text:'"...você chegou até aqui. Nenhum segurança durou 5 noites em 10 anos. Eles vão tentar tudo. Freddy, Bonnie, Chica, Foxy... e o Quinto. Você vai sentir quando ele aparecer. Boa sorte. Você vai precisar."',
+    choices:[
+      {text:'💪 "Eu vim até aqui. Não vou parar agora."',effect:'hpBonus',
+       result:'Determinação! HP começa em 120% e energia +10%.',tag:'good'},
+      {text:'🙏 "O que diabos é o Quinto?"',effect:'power+25',
+       result:'O medo te mantém alerta. Você economiza melhor: +25% energia.',tag:'good'},
+      {text:'🏃 "Posso simplesmente... sair pela porta?"',effect:'megaFast',
+       result:'Eles bloqueiam a saída. Modo pesadelo ativado!',tag:'bad'},
+    ]
+  },
+};
+
+// Modificadores de story que afetam o jogo
+let STORY_MODS={
+  speedMult:1, powerBonus:0, doorBonus:false,
+  foxyFast:false, hpStartBonus:0, tempSlowDrain:false,
+};
+
+function showStoryAfterNight(night, onDone){
+  const scene=STORY_SCENES[night];
+  if(!scene){onDone&&onDone();return;}
+  const ov=document.getElementById('story-overlay');
+  document.getElementById('story-portrait').textContent=scene.portrait;
+  document.getElementById('story-speaker').textContent=scene.speaker;
+  // Typewriter effect
+  const textEl=document.getElementById('story-text');
+  textEl.textContent='';
+  let i=0;
+  const type=()=>{if(i<scene.text.length){textEl.textContent+=scene.text[i++];setTimeout(type,18);}else buildChoices();};
+  type();
+  document.getElementById('story-choices').innerHTML='';
+  ov.classList.add('show');
+  function buildChoices(){
+    const choicesEl=document.getElementById('story-choices');
+    choicesEl.innerHTML='';
+    scene.choices.forEach((ch,idx)=>{
+      const btn=document.createElement('button');
+      btn.className='story-choice'+(ch.tag==='bad'?' bad':'');
+      btn.textContent=ch.text;
+      btn.onclick=()=>{
+        applyStoryEffect(ch.effect);
+        textEl.textContent=ch.result;
+        choicesEl.innerHTML='';
+        const cont=document.createElement('button');
+        cont.className='story-choice';
+        cont.textContent='▶ Continuar';
+        cont.onclick=()=>{ov.classList.remove('show');onDone&&onDone();};
+        choicesEl.appendChild(cont);
+      };
+      choicesEl.appendChild(btn);
+    });
+  }
+}
+
+function applyStoryEffect(effect){
+  if(!effect||effect==='none') return;
+  if(effect==='power+10') G_BONUS_POWER=10;
+  else if(effect==='power+15') G_BONUS_POWER=15;
+  else if(effect==='power+20') G_BONUS_POWER=20;
+  else if(effect==='power+25') G_BONUS_POWER=25;
+  else if(effect==='speed+10') STORY_MODS.speedMult=1.1;
+  else if(effect==='speed+15') STORY_MODS.speedMult=1.15;
+  else if(effect==='allFast')  STORY_MODS.speedMult=1.2;
+  else if(effect==='megaFast') STORY_MODS.speedMult=1.35;
+  else if(effect==='freddySlow') STORY_MODS.freddySlow=true;
+  else if(effect==='foxyFast')   STORY_MODS.foxyFast=true;
+  else if(effect==='doorBonus')  STORY_MODS.doorBonus=true;
+  else if(effect==='powerSave')  STORY_MODS.powerBonus=8;
+  else if(effect==='tempResist') STORY_MODS.tempSlowDrain=true;
+  else if(effect==='hpBonus'){STORY_MODS.hpStartBonus=20;G_BONUS_POWER=10;}
+}
+
+function startNight6(){
+  stopGame();
+  document.getElementById('ni-title').textContent='💀 Noite 6 — Pesadelo Final';
+  document.getElementById('ni-tip').textContent='Você não deveria estar aqui...';
+  showScreen('screen-nightintro');
+  setTimeout(()=>{
+    initState(6);
+    // Override speeds to N6 values
+    G.chars.freddy.speed=MOVE_SPEED_N6.freddy;
+    G.chars.bonnie.speed=MOVE_SPEED_N6.bonnie;
+    G.chars.chica.active=true; G.chars.chica.speed=MOVE_SPEED_N6.chica;
+    G.foxySpeed=MOVE_SPEED_N6.foxy;
+    G.mangle.active=true; G.mangle.speed=MOVE_SPEED_N6.mangle;
+    buildCamGrid(); resetUI();
+    showScreen('screen-game');
+    try{SFX.startAmbient(5)}catch(e){}
+    updateHeartbeat();
+    G.interval=setInterval(gameTick,1000);
+  },2800);
+}
+
+// Inject Night 6 button into gamewin screen on first display
+function injectNight6Button(){
+  if(document.getElementById('btn-night6')) return;
+  const n6btn=document.createElement('button');
+  n6btn.id='btn-night6';n6btn.className='btn-action';
+  n6btn.textContent='💀 Noite 6 (Pesadelo)';n6btn.onclick=startNight6;
+  const gw=document.getElementById('screen-gamewin');
+  const btnDiv=gw.querySelector('div');
+  if(btnDiv) btnDiv.appendChild(n6btn);
+}
+// showScreen fires a custom event — listen to update Night 6 button visibility
+document.addEventListener('fnaf-screen-shown',e=>{
+  if(e.detail==='screen-gamewin'){
+    injectNight6Button();
+    const scores=getScores();
+    const n6btn=document.getElementById('btn-night6');
+    if(n6btn) n6btn.style.display=scores.some(s=>s.night>=5)?'inline-block':'none';
+  }
+});
+
+// ══════════════════════════════════════════════════════════
+// LOADING SCREEN (first load)
+// ══════════════════════════════════════════════════════════
+function runLoadingScreen(cb){
+  showScreen('screen-loading');
+  const bar=document.getElementById('loading-bar');
+  const msg=document.getElementById('loading-msg');
+  const msgs=['Inicializando sistemas...','Carregando animatrônicos...','Verificando câmeras...','Testando portas...','Pronto!'];
+  let pct=0,mi=0;
+  const t=setInterval(()=>{
+    pct+=Math.random()*18+4;
+    if(pct>100) pct=100;
+    bar.style.width=pct+'%';
+    msg.textContent=msgs[Math.min(mi++,msgs.length-1)];
+    if(pct>=100){clearInterval(t);setTimeout(cb,400)}
+  },120);
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+FX.init();
+initSliders();
+renderScores();
+try{const t=localStorage.getItem('fnaf_theme');if(t)setTheme(t)}catch(e){}
+try{if(localStorage.getItem('fnaf_vhs')==='1')toggleVHS()}catch(e){}
+try{if(localStorage.getItem('fnaf_cb')==='1')toggleColorblind()}catch(e){}
+// Show loading screen then menu
+runLoadingScreen(()=>{showScreen('screen-menu');renderScores()});
+</script>
+</body>
+</html>
